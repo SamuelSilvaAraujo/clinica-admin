@@ -22,4 +22,5 @@ urlpatterns = [
     path('imunoterapia/', include('immunotherapy.urls')),
     path('pacientes/', include('patient.urls')),
     path('farmacia/', include('pharmacy.urls')),
+    path('accounts/', include('django.contrib.auth.urls')),
 ]
