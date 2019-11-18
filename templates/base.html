@@ -13,8 +13,10 @@
     <link href="{% static 'css/animate.css' %}" rel="stylesheet">
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
 
+    {% block head %}{% endblock %}
+
 </head>
-<body>
+<body class="fixed-sidebar no-skin-config full-height-layout">
 
 <div id="wrapper">
 
@@ -22,24 +24,19 @@
         <div class="sidebar-collapse">
             <ul class="nav metismenu" id="side-menu">
                 <li class="nav-header">
-                    <div class="dropdown profile-element">
-                        <span class="block m-t-xs font-bold text-white">{{request.user}}</span>
-                    </div>
-                    <div class="logo-element">
-                        CR
-                    </div>
+                    <span class="block m-t-xs font-bold" style="color: white">{{ request.user.get_full_name  }}</span>
                 </li>
-                <li class="active">
-                    <a href=""><i class="fa fa-calendar"></i> <span class="nav-label">Agenda</span></a>
+                <li class="{{schedulePage}}">
+                    <a href="{% url 'schedule' %}"> <span class="nav-label">Agenda</span></a>
+                </li>
+                <li class="{{ patientsPage }}">
+                    <a href="{% url 'patients' %}"> <span class="nav-label">Pacientes</span> </a>
                 </li>
                 <li>
-                    <a href=""><i class="fas fa-users-medical"></i> <span class="nav-label">Pacientes</span> </a>
+                    <a href=""> <span class="nav-label">Remédios</span> </a>
                 </li>
                 <li>
-                    <a href=""><i class="fa fa-th-large"></i> <span class="nav-label">Remédios</span> </a>
-                </li>
-                <li>
-                    <a href=""><i class="fa fa-th-large"></i> <span class="nav-label">Imunoterapia</span> </a>
+                    <a href=""> <span class="nav-label">Imunoterapia</span> </a>
                 </li>
             </ul>
 
@@ -51,9 +48,6 @@
             <nav class="navbar navbar-static-top white-bg" role="navigation" style="margin-bottom: 0">
                 <div class="navbar-header">
                     <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i></a>
-                    <div class="navbar-minimalize minimalize-styl-2 navbar-left">
-                        {% block pageTitle %}{% endblock %}
-                    </div>
                 </div>
                 <ul class="nav navbar-top-links navbar-right">
                     <li>
@@ -65,7 +59,12 @@
 
             </nav>
         </div>
-        <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row wrapper border-bottom white-bg page-heading">
+            <div class="col-lg-10">
+                {% block header %}{% endblock %}
+            </div>
+        </div>
+        <div class="fh-breadcrumb">
             {% block content %}{% endblock %}
         </div>
         <div class="footer">
@@ -89,6 +88,8 @@
 <!-- Custom and plugin javascript -->
 <script src="{% static 'js/inspinia.js' %}"></script>
 <script src="{% static 'js/plugins/pace/pace.min.js' %}"></script>
+
+{% block script %}{% endblock %}
 
 </body>
 </html>
