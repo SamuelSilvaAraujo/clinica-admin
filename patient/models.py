@@ -40,3 +40,6 @@ class Patient(models.Model):
     phone = models.CharField('Telefone', max_length=16, blank=True, null=True)
     rg = models.CharField('RG', max_length=9, blank=True, null=True)
     cpf = models.CharField('CPF', max_length=14, blank=True, null=True)
+
+    def __str__(self):
+        return self.name

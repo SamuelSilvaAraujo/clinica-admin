@@ -1,13 +1,78 @@
 {% extends 'base.html' %}
 
-{% block pageTitle %}
-    <h2 class="m-0 pb-2">
+{% load static %}
+
+{% block head %}
+
+    <link href="{% static 'libs/fullCalendar/core/main.css' %}" rel='stylesheet' />
+    <link href="{% static 'libs/fullCalendar/bootstrap/main.css' %}" rel='stylesheet' />
+    <link href="{% static 'libs/fullCalendar/daygrid/main.css' %}" rel='stylesheet' />
+    <link href="{% static 'libs/fullCalendar/timegrid/main.css' %}" rel='stylesheet' />
+    <link href="{% static 'libs/fullCalendar/timeline/main.css' %}" rel='stylesheet' />
+    <link href="{% static 'libs/fullCalendar/resource-timeline/main.css' %}" rel='stylesheet' />
+
+{% endblock %}
+
+{% block header %}
+    <h2>
         Agenda
     </h2>
 {% endblock %}
 
 {% block content %}
 
-    <h1>Samuel</h1>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox">
+                <div class="ibox-content">
+                    <div id="calendar"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block script %}
+
+    <script src="{% static 'libs/fullCalendar/core/main.js' %}"></script>
+    <script src="{% static 'libs/fullCalendar/bootstrap/main.js' %}"></script>
+    <script src="{% static 'libs/fullCalendar/interaction/main.js' %}"></script>
+    <script src="{% static 'libs/fullCalendar/daygrid/main.js' %}"></script>
+    <script src="{% static 'libs/fullCalendar/timegrid/main.js' %}"></script>
+    <script src="{% static 'libs/fullCalendar/timeline/main.js' %}"></script>
+    <script src="{% static 'libs/fullCalendar/resource-common/main.js' %}"></script>
+    <script src="{% static 'libs/fullCalendar/resource-timeline/main.js' %}"></script>
+    <script src="{% static 'libs/fullCalendar/core/locales/pt-br.js' %}"></script>
+
+
+    <script>
+        $(document).ready(function() {
+            var calendarEl = document.getElementById('calendar');
+
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                plugins: [ 'bootstrap', 'interaction', 'dayGrid', 'timeGrid', 'resourceTimeline' ],
+                locale: 'pt-br',
+                themeSystem: 'bootstrap',
+                editable: true,
+                scrollTime: '00:00',
+                header: {
+                    left: 'today prev,next',
+                    center: 'title',
+                    right: 'timeGridDay,resourceTimelineThreeDays,timeGridWeek,dayGridMonth'
+                },
+                defaultView: 'timeGridDay',
+                views: {
+                    resourceTimelineThreeDays: {
+                        type: 'timeGridWeek',
+                        duration: { days: 3 },
+                        buttonText: '3 dias'
+                    }
+                },
+            });
+            calendar.render();
+        });
+
+    </script>
 
 {% endblock %}
