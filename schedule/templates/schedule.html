@@ -54,8 +54,17 @@
                 plugins: [ 'bootstrap', 'interaction', 'dayGrid', 'timeGrid', 'resourceTimeline' ],
                 locale: 'pt-br',
                 themeSystem: 'bootstrap',
+                allDaySlot: false,
                 editable: true,
-                scrollTime: '00:00',
+                selectable: true,
+                minTime: '06:00',
+                maxTime: '20:00',
+                slotDuration: '00:30',
+                slotLabelFormat: {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    timeformat: 'H:mm',
+                },
                 header: {
                     left: 'today prev,next',
                     center: 'title',
@@ -69,6 +78,9 @@
                         buttonText: '3 dias'
                     }
                 },
+                select: function(info) {
+                    window.location.href = "{% url 'appointment_create' %}";
+                }
             });
             calendar.render();
         });
