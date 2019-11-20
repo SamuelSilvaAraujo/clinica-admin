@@ -1,5 +1,11 @@
 {% extends 'base.html' %}
 
+{% load static %}
+
+{% block head %}
+    <link href="{% static 'libs/select2-4.0.12/dist/css/select2.min.css' %}" rel="stylesheet" />
+{% endblock %}
+
 {% block header %}
     <h2>
         Criar Agendamento
@@ -10,59 +16,118 @@
 
     <div class="row">
         <div class="col-lg-12">
-            <form method="post">
-                {% csrf_token %}
-                <div class="form-group row">
-                    <div class="col-sm-12">
-                        <label for="{{ form.patient.id_for_label }}">Paciente*</label>
-                        {{ form.patient }}
-                    </div>
-                </div>
+            <div class="card">
+                <div class="card-body">
+                    <form method="post" id="appointment-form">
+                        {% csrf_token %}
+                        <div class="form-group row">
+                            <div class="col-md-12">
+                                <label for="id_patient">Paciente*</label>
+                                <select name="patient" id="id_patient" class="form-control" required data-msg-required="Indique um paciente.">
+                                </select>
+                            </div>
+                        </div>
 
-                <div class="form-group row">
+                        <div class="form-group row">
+                            <div class="col-sm-4">
+                                <label for="{{ form.date.id_for_label }}">Data*</label>
+                                {{ form.date }}
+                                {#                                <input type="date" class="form-control">#}
+                            </div>
+                            <div class="col-sm-4">
+                                <label for="{{ form.start.id_for_label }}">Hora de inicio*</label>
+                                {{ form.start }}
+                            </div>
+                            <div class="col-sm-4">
+                                <label for="{{ form.end.id_for_label }}">Hora de fim*</label>
+                                {{ form.end }}
+                            </div>
+                        </div>
 
-                    {#                    <div class='col-sm-4'>#}
-                    {#                        <div class="form-group">#}
-                    {#                            <div class='input-group date' id='datetimepicker1'>#}
-                    {#                                <input type='text' class="form-control" />#}
-                    {#                                <span class="input-group-addon">#}
-                    {#                                    <span class="fa fa-calendar"></span>#}
-                    {#                                </span>#}
-                    {#                            </div>#}
-                    {#                        </div>#}
-                    {#                    </div>#}
-                    <div class="col-sm-4">
-                        <label for="{{ form.date.id_for_label }}">Data</label>
-                        {{ form.date }}
-                    </div>
-                    <div class="col-sm-4">
-                        <label for="{{ form.start.id_for_label }}">Inicio</label>
-                        {{ form.start }}
-                    </div>
-                    <div class="col-sm-4">
-                        <label for="{{ form.end.id_for_label }}">Fim</label>
-                        {{ form.end }}
-                    </div>
-                </div>
+                        <div class="form-group row">
+                            <div class="col-sm-12">
+                                <label for="{{ form.notes.id_for_label }}">Descrição</label>
+                                {{ form.notes }}
+                            </div>
+                        </div>
 
-                <div class="hr-line-dashed"></div>
-                <div class="form-group row">
-                    <div class="col-sm-4 col-sm-offset-2">
-                        <a href="{% url 'patients' %}" class="btn btn-secondary btn-sm">Cancelar</a>
-                        <button class="btn btn-primary btn-sm" type="submit">Salvar</button>
-                    </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group row">
+                            <div class="col-sm-4 col-sm-offset-2">
+                                <a href="{% url 'patients' %}" class="btn btn-secondary btn-sm">Cancelar</a>
+                                <button class="btn btn-primary btn-sm" type="submit">Salvar</button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 
 {% endblock %}
 
 {% block script %}
-    {#    <script type="text/javascript">#}
-    {#        $(function () {#}
-    {#            $('#datetimepicker1').datetimepicker();#}
-    {#        });#}
-    {#    </script>#}
+
+    <script src="{% static 'libs/select2-4.0.12/dist/js/select2.min.js' %}"></script>
+    <script src="{% static 'libs/select2-4.0.12/dist/js/i18n/pt-BR.js' %}"></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+            var $id_patient = $('#id_patient');
+
+            $id_patient.select2({
+                locale: 'pt-BR',
+                placeholder: "Digite o nome para encontrar o Paciente.",
+                allowClear: true,
+                minimumInputLength: 3,
+                ajax: {
+                    url: '{% url "ajax_patients" %}',
+                    type: 'GET',
+                    dataType: 'json',
+                    processResults: function (data) {
+                        return {
+                            results: $.map(data, function (item) {
+                                return {
+                                    text: item.label,
+                                    id: item.id,
+                                    name: item.name
+                                }
+                            })
+                        };
+                    }
+                },
+            });
+
+            $id_patient.on('select2:select', function (e) {
+                var data = e.params.data;
+                if (data.id === 'NEW_PATIENT') {
+                    window.location = `{% url 'patient_create' %}?patient_name=${data.name}`;
+                }
+
+            });
+
+            {% if patient %}
+
+                var newOption = new Option('{{ patient.name }}', '{{ patient.id }}', true, true);
+                $id_patient.append(newOption).trigger('change');
+
+            {% endif %}
+
+            $('#appointment-form').submit(function (e) {
+                console.log($id_patient.val());
+                console.log($('#{{ form.date.id_for_label }}').val());
+                console.log($('#{{ form.start.id_for_label }}').val());
+                console.log($('#{{ form.end.id_for_label }}').val());
+                console.log($('#{{ form.notes.id_for_label }}').val());
+                var date = $('#{{ form.date.id_for_label }}').val();
+                var start = $('#{{ form.start.id_for_label }}').val();
+                var end = $('#{{ form.end.id_for_label }}').val();
+                e.preventDefault();
+            })
+
+        });
+
+    </script>
 
 {% endblock %}

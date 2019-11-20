@@ -1,6 +1,7 @@
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
+from django.shortcuts import redirect
 from .models import Patient
 from .forms import PatientForm
 
@@ -25,7 +26,18 @@ class PatientCreateView(LoginRequiredMixin, CreateView):
         context["patientsPage"] = "active"
         return context
 
+    def get_initial(self):
+        initial = super(PatientCreateView, self).get_initial()
+        initial = initial.copy()
+        patient_name = self.request.GET.get('patient_name')
+        if patient_name:
+            initial['name'] = patient_name
+        return initial
+
     def get_success_url(self):
+        patient_name = self.request.GET.get('patient_name')
+        if patient_name:
+            return '{}?patient_id={}'.format(reverse('appointment_create'), self.object.id)
         return reverse('patients')
 
 

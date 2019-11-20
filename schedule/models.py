@@ -19,3 +19,4 @@ class Appointment(models.Model):
     start = models.DateTimeField('Hora de Início')
     end = models.DateTimeField('Hora de Fim')
     status = models.CharField(max_length=15, choices=STATUS_CHOICES, default=SCHEDULED)
+    notes = models.TextField('Descrição')

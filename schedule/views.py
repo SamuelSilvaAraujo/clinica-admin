@@ -4,6 +4,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Appointment
 from .forms import AppointmentForm
 
+from patient.models import Patient
+
 
 class ScheduleView(LoginRequiredMixin, TemplateView):
     template_name = 'schedule.html'
@@ -22,4 +24,8 @@ class AppointmentCreateView(LoginRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super(AppointmentCreateView, self).get_context_data(**kwargs)
         context["schedulePage"] = "active"
+        patient_id = self.request.GET.get('patient_id')
+        if patient_id:
+            patient = Patient.objects.get(id=patient_id)
+            context["patient"] = patient
         return context
