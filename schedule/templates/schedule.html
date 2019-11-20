@@ -4,12 +4,15 @@
 
 {% block head %}
 
+
     <link href="{% static 'libs/fullCalendar/core/main.css' %}" rel='stylesheet' />
+{#    <link href="https://bootswatch.com/4/litera/bootstrap.min.css" rel='stylesheet' />#}
     <link href="{% static 'libs/fullCalendar/bootstrap/main.css' %}" rel='stylesheet' />
     <link href="{% static 'libs/fullCalendar/daygrid/main.css' %}" rel='stylesheet' />
     <link href="{% static 'libs/fullCalendar/timegrid/main.css' %}" rel='stylesheet' />
     <link href="{% static 'libs/fullCalendar/timeline/main.css' %}" rel='stylesheet' />
     <link href="{% static 'libs/fullCalendar/resource-timeline/main.css' %}" rel='stylesheet' />
+
 
 {% endblock %}
 
@@ -23,17 +26,14 @@
 
     <div class="row">
         <div class="col-lg-12">
-            <div class="ibox">
-                <div class="ibox-content">
-                    <div id="calendar"></div>
-                </div>
-            </div>
+            <div id="calendar"></div>
         </div>
     </div>
 
 {% endblock %}
 
 {% block script %}
+
 
     <script src="{% static 'libs/fullCalendar/core/main.js' %}"></script>
     <script src="{% static 'libs/fullCalendar/bootstrap/main.js' %}"></script>
@@ -57,9 +57,8 @@
                 allDaySlot: false,
                 editable: true,
                 selectable: true,
-                minTime: '06:00',
-                maxTime: '20:00',
                 slotDuration: '00:30',
+                displayEventTime: true,
                 slotLabelFormat: {
                     hour: '2-digit',
                     minute: '2-digit',

@@ -18,4 +18,4 @@ class Appointment(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
     start = models.DateTimeField('Hora de Início')
     end = models.DateTimeField('Hora de Fim')
-    status = models.CharField(max_length=15, choices=STATUS_CHOICES)
+    status = models.CharField(max_length=15, choices=STATUS_CHOICES, default=SCHEDULED)
