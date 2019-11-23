@@ -22,31 +22,29 @@
                         {% csrf_token %}
                         <div class="form-group row">
                             <div class="col-md-12">
-                                <label for="id_patient">Paciente*</label>
-                                <select name="patient" id="id_patient" class="form-control" required data-msg-required="Indique um paciente.">
-                                </select>
+                                <label for="{{form.patient.id_for_label}}">{{ form.patient.label }}{% if form.patient.field.required %}*{% endif %}</label>
+                                {{ form.patient }}
                             </div>
                         </div>
 
                         <div class="form-group row">
                             <div class="col-sm-4">
-                                <label for="{{ form.date.id_for_label }}">Data*</label>
+                                <label for="{{ form.date.id_for_label }}">{{ form.date.label }}{% if form.date.field.required %}*{% endif %}</label>
                                 {{ form.date }}
-                                {#                                <input type="date" class="form-control">#}
                             </div>
                             <div class="col-sm-4">
-                                <label for="{{ form.start.id_for_label }}">Hora de inicio*</label>
-                                {{ form.start }}
+                                <label for="{{ form.start_hour.id_for_label }}">{{ form.start_hour.label }}{% if form.start_hour.field.required %}*{% endif %}</label>
+                                {{ form.start_hour }}
                             </div>
                             <div class="col-sm-4">
-                                <label for="{{ form.end.id_for_label }}">Hora de fim*</label>
-                                {{ form.end }}
+                                <label for="{{ form.end_hour.id_for_label }}">{{ form.end_hour.label }}{% if form.end_hour.field.required %}*{% endif %}</label>
+                                {{ form.end_hour }}
                             </div>
                         </div>
 
                         <div class="form-group row">
                             <div class="col-sm-12">
-                                <label for="{{ form.notes.id_for_label }}">Descrição</label>
+                                <label for="{{ form.notes.id_for_label }}">{{ form.notes.label }}{% if form.notes.field.required %}*{% endif %}</label>
                                 {{ form.notes }}
                             </div>
                         </div>
@@ -71,10 +69,13 @@
     <script src="{% static 'libs/select2-4.0.12/dist/js/select2.min.js' %}"></script>
     <script src="{% static 'libs/select2-4.0.12/dist/js/i18n/pt-BR.js' %}"></script>
 
+    <script src="{% static 'libs/vanilla-text-mask/vanilla-text-mask.js' %}"></script>
+    <script src="{% static 'libs/vanilla-text-mask/text-mask-addons.js' %}"></script>
+
     <script type="text/javascript">
 
         $(document).ready(function() {
-            var $id_patient = $('#id_patient');
+            var $id_patient = $('#{{ form.patient.id_for_label }}');
 
             $id_patient.select2({
                 locale: 'pt-BR',
@@ -104,7 +105,6 @@
                 if (data.id === 'NEW_PATIENT') {
                     window.location = `{% url 'patient_create' %}?patient_name=${data.name}`;
                 }
-
             });
 
             {% if patient %}
@@ -114,17 +114,23 @@
 
             {% endif %}
 
-            $('#appointment-form').submit(function (e) {
-                console.log($id_patient.val());
-                console.log($('#{{ form.date.id_for_label }}').val());
-                console.log($('#{{ form.start.id_for_label }}').val());
-                console.log($('#{{ form.end.id_for_label }}').val());
-                console.log($('#{{ form.notes.id_for_label }}').val());
-                var date = $('#{{ form.date.id_for_label }}').val();
-                var start = $('#{{ form.start.id_for_label }}').val();
-                var end = $('#{{ form.end.id_for_label }}').val();
-                e.preventDefault();
-            })
+            $(function () {
+                vanillaTextMask.maskInput({
+                    inputElement: $('#{{ form.start_hour.id_for_label }}')[0],
+                    mask: [/[0-2]/, /\d/, ':', /[0-6]/, /\d/],
+                    guide: false
+                });
+                vanillaTextMask.maskInput({
+                    inputElement: $('#{{ form.end_hour.id_for_label }}')[0],
+                    mask: [/[0-2]/, /\d/, ':', /[0-6]/, /\d/],
+                    guide: false
+                });
+                vanillaTextMask.maskInput({
+                    inputElement: $('#{{form.date.id_for_label}}')[0],
+                    mask: [/[0-3]/, /\d/, '/', /[0-1]/, /\d/, '/', /[1-2]/, /\d/, /\d/, /\d/],
+                    guide: false
+                });
+            });
 
         });
 

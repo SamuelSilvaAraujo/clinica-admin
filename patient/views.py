@@ -1,7 +1,6 @@
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
-from django.shortcuts import redirect
 from .models import Patient
 from .forms import PatientForm
 

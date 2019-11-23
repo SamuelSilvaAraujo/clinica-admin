@@ -20,3 +20,6 @@ class Appointment(models.Model):
     end = models.DateTimeField('Hora de Fim')
     status = models.CharField(max_length=15, choices=STATUS_CHOICES, default=SCHEDULED)
     notes = models.TextField('Descrição')
+
+    def __str__(self):
+        return "{} | {}".format(self.patient.name, self.start.date())
