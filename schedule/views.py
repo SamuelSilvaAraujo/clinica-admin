@@ -33,6 +33,16 @@ class AppointmentCreateView(LoginRequiredMixin, CreateView):
             context["patient"] = patient
         return context
 
+    def get_initial(self):
+        initial = super(AppointmentCreateView, self).get_initial()
+        initial = initial.copy()
+        start = datetime.strptime(self.request.GET.get('start'), "%d-%m-%Y %H:%M")
+        end = datetime.strptime(self.request.GET.get('end'), "%d-%m-%Y %H:%M")
+        initial['date'] = start.date().strftime('%d/%m/%Y')
+        initial['start_hour'] = start.time()
+        initial['end_hour'] = end.time()
+        return initial
+
     def form_valid(self, form):
         date = form.cleaned_data['date']
         start_hour = form.cleaned_data['start_hour']

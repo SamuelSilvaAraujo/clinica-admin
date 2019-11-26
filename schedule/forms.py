@@ -4,7 +4,7 @@ from .models import Appointment
 
 
 class AppointmentForm(forms.ModelForm):
-    date = forms.DateField(label='Data', input_formats=['%d/%m/%Y'],
+    date = forms.DateField(label='Data', input_formats=['%d-%m-%Y'],
                            widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': '__/__/____'}))
     start_hour = forms.TimeField(label='Hora de Inicio', input_formats=['%H:%M'],
                                  widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': '__:__'}))

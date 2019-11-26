@@ -81,7 +81,9 @@
                 },
                 events:"{% url 'appointments_ajax' %}",
                 select: function(info) {
-                    window.location.href = "{% url 'appointment_create' %}";
+                    var start = `${info.start.getDate()}-${info.start.getMonth() + 1}-${info.start.getFullYear()} ${info.start.getHours()}:${info.start.getMinutes()}`;
+                    var end = `${info.end.getDay()}-${info.end.getMonth()}-${info.end.getFullYear()} ${info.end.getHours()}:${info.end.getMinutes()}`;
+                    window.location.href = `{% url 'appointment_create' %}?start=${start}&end=${end}`;
                 },
                 eventClick: function (info) {
 
