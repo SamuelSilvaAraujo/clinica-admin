@@ -52,8 +52,13 @@
                         <div class="hr-line-dashed"></div>
                         <div class="form-group row">
                             <div class="col-sm-4 col-sm-offset-2">
-                                <a href="{% url 'patients' %}" class="btn btn-secondary btn-sm">Cancelar</a>
-                                <button class="btn btn-primary btn-sm" type="submit">Salvar</button>
+                                <a href="{% url 'schedule' %}" class="btn btn-secondary">Cancelar</a>
+                                <button class="btn btn-primary" type="submit">Salvar</button>
+                                {% if form.instance.pk %}
+                                    <button class="btn btn-danger" type="button" onclick="return confirm('Você tem certeza que deseja excluir?');">
+                                        Excluir
+                                    </button>
+                                {% endif %}
                             </div>
                         </div>
                     </form>

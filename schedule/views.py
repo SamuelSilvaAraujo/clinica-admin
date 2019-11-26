@@ -1,4 +1,4 @@
-from django.views.generic import TemplateView, CreateView
+from django.views.generic import TemplateView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
 
@@ -20,7 +20,7 @@ class ScheduleView(LoginRequiredMixin, TemplateView):
 
 
 class AppointmentCreateView(LoginRequiredMixin, CreateView):
-    template_name = 'appointment/create.html'
+    template_name = 'appointment/form.html'
     model = Appointment
     form_class = AppointmentForm
 
@@ -55,6 +55,38 @@ class AppointmentCreateView(LoginRequiredMixin, CreateView):
         form.instance.end = end_date
 
         return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('schedule')
+
+
+class AppointmentUpdateView(LoginRequiredMixin, UpdateView):
+    template_name = 'appointment/form.html'
+    model = Appointment
+    form_class = AppointmentForm
+
+    def get_context_data(self, **kwargs):
+        context = super(AppointmentUpdateView, self).get_context_data(**kwargs)
+        context["schedulePage"] = "active"
+        return context
+
+    def get_initial(self):
+        appointment = Appointment.objects.get(pk=self.object.pk)
+        initial = super(AppointmentUpdateView, self).get_initial()
+        initial = initial.copy()
+        start = appointment.start
+        end = appointment.end
+        initial['date'] = start.date().strftime('%d/%m/%Y')
+        initial['start_hour'] = start.time()
+        initial['end_hour'] = end.time()
+        return initial
+
+    def get_success_url(self):
+        return reverse('schedule')
+
+
+class AppointmentDeleteView(LoginRequiredMixin, DeleteView):
+    model = Appointment
 
     def get_success_url(self):
         return reverse('schedule')

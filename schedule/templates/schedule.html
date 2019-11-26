@@ -92,6 +92,7 @@
                             label: 'Editar',
                             className: 'btn-success',
                             callback: function () {
+                                window.location.href = `/agenda/update/agendamento/${info.event.id}/`;
                             },
                         }
                     };
@@ -100,10 +101,10 @@
                         status_msg = '';
 
                     if (appointment_status === 'scheduled') {
-                        status_msg = '<span>Agendado</span> &nbsp';
-                        status_msg += `<b>Mudar para:</b> <button class="btn btn-xs btn-success">Atendido</button>`;
-                        status_msg += `&nbsp <button class="btn btn-xs btn-danger">Cancelado</button>`;
-                        status_msg += `&nbsp <button class="btn btn-xs btn-warning">Não Compareceu</button>`;
+                        status_msg = '<span badge badge-primary>Agendado</span> <br/>';
+                        status_msg += `<b>Mudar Status para:</b> <button class="btn btn-sm btn-success">Atendido</button>`;
+                        status_msg += `&nbsp <button class="btn btn-sm btn-danger">Cancelado</button>`;
+                        status_msg += `&nbsp <button class="btn btn-sm btn-warning">Não Compareceu</button>`;
                     } else if (appointment_status === 'cancelled') {
                         status_msg = '<span>Cancelado</span>';
                     } else if (appointment_status === 'answered') {
@@ -112,9 +113,9 @@
 
                     bootbox.dialog({
                         title: 'Agendamento para ' + info.event.extendedProps.patient__name,
-                        message: '<b>Status: </b>' + status_msg + '<br/>' +
-                            '<b>Data: </b>' + info.event.start.toLocaleDateString() + '<br/>' +
-                            '<b>Observações: </b>' + info.event.extendedProps.notes,
+                        message: '<b>Data: </b>' + info.event.start.toLocaleDateString() + '<br/>' +
+                            '<b>Observações: </b>' + info.event.extendedProps.notes + '<br/>' +
+                            '<b>Status: </b>' + status_msg + '<br/>',
                         className: 'bootbox-lg',
                         onEscape: true,
                         buttons: buttons
