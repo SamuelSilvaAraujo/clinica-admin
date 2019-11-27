@@ -1,4 +1,4 @@
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
 from .models import Patient
@@ -59,3 +59,13 @@ class PatientDeleteView(LoginRequiredMixin, DeleteView):
 
     def get_success_url(self):
         return reverse('patients')
+
+
+class PatientDetailView(LoginRequiredMixin, DetailView):
+    model = Patient
+    template_name = 'patient/detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PatientDetailView, self).get_context_data(**kwargs)
+        context["patientsPage"] = "active"
+        return context

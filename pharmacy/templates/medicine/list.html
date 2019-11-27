@@ -10,8 +10,8 @@
 
 {% block header %}
     <h2>
-        Pacientes &nbsp
-        <a href="{% url 'patient_create' %}" class="btn btn-sm btn-primary"><i class="fa fa-plus"></i>&nbsp  Cadastrar Paciente</a>
+        Remédios &nbsp
+        <a href="" class="btn btn-sm btn-primary"><i class="fa fa-plus"></i>&nbsp  Cadastrar Remédio</a>
     </h2>
 {% endblock %}
 
@@ -22,22 +22,18 @@
                 <table class="table" id="dataTable">
                     <thead>
                     <tr>
-                        <th>Paciente</th>
-                        <th>Data de nascimento</th>
+                        <th>Remédio</th>
                         <th style="width: 10%"></th>
                     </tr>
                     </thead>
                     <tbody>
-                    {% for patient in object_list %}
+                    {% for medicine in object_list %}
                         <tr>
+                            <td>{{ medicine.name }}</td>
                             <td>
-                                <a href="{% url 'patient_detail' patient.id %}">{{ patient.name }}</a>
-                            </td>
-                            <td>{{ patient.birth_date|date:'d/m/Y' }}</td>
-                            <td>
-                                <form method="post" action="{% url 'patient_delete' patient.id %}" class="p-0 m-0">
+                                <form method="post" action="" class="p-0 m-0">
                                     {% csrf_token %}
-                                    <a href="{% url 'patient_update' patient.id %}" class="btn btn-write btn-sm">
+                                    <a href="" class="btn btn-write btn-sm">
                                         <i class="fa fa-fw fa-edit"></i>
                                     </a>
                                     <button type="submit" class="btn btn-write btn-sm" onclick="return confirm('Você tem certeza que deseja remover?');">
@@ -64,11 +60,7 @@
             $('#dataTable').DataTable({
                 language: {
                     url: '//cdn.datatables.net/plug-ins/1.10.19/i18n/Portuguese-Brasil.json'
-                },
-                columnDefs: [ {
-                    "targets": 2,
-                    "orderable": false
-                }]
+                }
             });
         });
     </script>
