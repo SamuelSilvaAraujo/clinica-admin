@@ -2,7 +2,7 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView, D
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
 from .models import Patient
-from .forms import PatientForm
+from .forms import PatientForm, PhotoForm
 
 
 class PatientListView(LoginRequiredMixin, ListView):
@@ -69,3 +69,12 @@ class PatientDetailView(LoginRequiredMixin, DetailView):
         context = super(PatientDetailView, self).get_context_data(**kwargs)
         context["patientsPage"] = "active"
         return context
+
+
+class PatientPhotoUpdate(LoginRequiredMixin, UpdateView):
+    model = Patient
+    template_name = 'patient/detail.html'
+    form_class = PhotoForm
+
+    def get_success_url(self):
+        return reverse('patient_detail', kwargs={'pk': self.object.id})

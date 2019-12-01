@@ -18,3 +18,12 @@ class PatientForm(forms.ModelForm):
             'city': forms.TextInput(attrs={'class': 'form-control'}),
             'convenio': forms.TextInput(attrs={'class': 'form-control'})
         }
+
+
+class PhotoForm(forms.ModelForm):
+    class Meta:
+        model = Patient
+        fields = ('photo', )
+        widgets = {
+            'photo': forms.HiddenInput()
+        }

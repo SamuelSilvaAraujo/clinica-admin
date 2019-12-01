@@ -41,6 +41,7 @@ class Patient(models.Model):
     rg = models.CharField('RG', max_length=9, blank=True, null=True)
     cpf = models.CharField('CPF', max_length=14, blank=True, null=True)
     convenio = models.CharField('Convênio', max_length=50)
+    photo = models.ImageField('foto', blank=True, null=True, upload_to="patient_photo")
 
     def __str__(self):
         return self.name
