@@ -15,6 +15,13 @@ class Appointment(models.Model):
         (ANSWERED, 'Atendido')
     )
 
+    STATUS_COLORS = {
+        SCHEDULED: '#4e73df',
+        CANCELLED: '#e74a3b',
+        DID_NOT_ATTEND: '#f6c23e',
+        ANSWERED: '#1cc88a'
+    }
+
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, verbose_name='Paciente')
     start = models.DateTimeField('Hora de Início')
     end = models.DateTimeField('Hora de Fim')

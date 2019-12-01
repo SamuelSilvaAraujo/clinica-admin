@@ -78,7 +78,27 @@
         </div>
         <div class="col-lg-4 order-lg-1 text-center">
             <img src="{% static 'img/avatar.png' %}" class="mx-auto img-fluid img-circle d-block" alt="avatar">
-            <button class="btn btn-info mt-4">Carregar foto</button>
+            <button type="button" class="btn btn-info mt-4" data-toggle="modal" data-target="#changePhotoModal">Alterar foto</button>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="changePhotoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Alterar Foto</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" style="display: none">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success">Carregar do Computador</button>
+                    <button type="button" class="btn btn-primary">Tirar com Webcam</button>
+                </div>
+            </div>
         </div>
     </div>
 

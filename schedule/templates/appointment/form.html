@@ -8,7 +8,7 @@
 
 {% block header %}
     <h2>
-        Criar Agendamento
+        {% if form.instance.pk %} Editar {% else %}Criar {% endif %}Agendamento
     </h2>
 {% endblock %}
 
@@ -48,20 +48,22 @@
                                 {{ form.notes }}
                             </div>
                         </div>
-
-                        <div class="hr-line-dashed"></div>
-                        <div class="form-group row">
-                            <div class="col-sm-4 col-sm-offset-2">
-                                <a href="{% url 'schedule' %}" class="btn btn-secondary">Cancelar</a>
-                                <button class="btn btn-primary" type="submit">Salvar</button>
-                                {% if form.instance.pk %}
-                                    <button class="btn btn-danger" type="button" onclick="return confirm('Você tem certeza que deseja excluir?');">
-                                        Excluir
-                                    </button>
-                                {% endif %}
-                            </div>
-                        </div>
                     </form>
+
+                    <div class="form-group row">
+                        <div class="col-sm-12 col-sm-offset-12">
+                            <a href="{% url 'schedule' %}" class="btn btn-secondary">Cancelar</a>
+                            <button class="btn btn-primary" type="button" onclick="return $('#appointment-form').submit()">Salvar</button>
+                            {% if form.instance.pk %}
+                                <button class="btn btn-danger" type="button" id="delete-button">
+                                    Excluir
+                                </button>
+                                <form method="post" action="{% url 'appointment_delete' form.instance.pk %}" id="delete-form">
+                                    {% csrf_token %}
+                                </form>
+                            {% endif %}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -136,6 +138,13 @@
                     guide: false
                 });
             });
+
+            $('#delete-button').click(function () {
+                var confirme = confirm('Você tem certeza que deseja excluir?');
+                if(confirme === true) {
+                    $('#delete-form').submit();
+                }
+            })
 
         });
 

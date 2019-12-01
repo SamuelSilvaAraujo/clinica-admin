@@ -36,8 +36,8 @@ class AppointmentCreateView(LoginRequiredMixin, CreateView):
     def get_initial(self):
         initial = super(AppointmentCreateView, self).get_initial()
         initial = initial.copy()
-        start = datetime.strptime(self.request.GET.get('start'), "%d-%m-%Y %H:%M")
-        end = datetime.strptime(self.request.GET.get('end'), "%d-%m-%Y %H:%M")
+        start = datetime.strptime(self.request.GET.get('start'), "%Y-%m-%dT%H:%M:%S.%fZ")
+        end = datetime.strptime(self.request.GET.get('end'), "%Y-%m-%dT%H:%M:%S.%fZ")
         initial['date'] = start.date().strftime('%d/%m/%Y')
         initial['start_hour'] = start.time()
         initial['end_hour'] = end.time()

@@ -49,82 +49,112 @@
 
 
     <script>
-        $(document).ready(function() {
-            var calendarEl = document.getElementById('calendar');
+        var calendarEl = document.getElementById('calendar');
 
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                plugins: [ 'bootstrap', 'interaction', 'dayGrid', 'timeGrid', 'resourceTimeline' ],
-                locale: 'pt-br',
-                themeSystem: 'bootstrap',
-                allDaySlot: false,
-                editable: true,
-                selectable: true,
-                slotDuration: '00:30',
-                displayEventTime: true,
-                slotLabelFormat: {
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    timeformat: 'H:mm',
-                },
-                header: {
-                    left: 'today prev,next',
-                    center: 'title',
-                    right: 'timeGridDay,resourceTimelineThreeDays,timeGridWeek,dayGridMonth'
-                },
-                defaultView: 'timeGridDay',
-                views: {
-                    resourceTimelineThreeDays: {
-                        type: 'timeGridWeek',
-                        duration: { days: 3 },
-                        buttonText: '3 dias'
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            plugins: [ 'bootstrap', 'interaction', 'dayGrid', 'timeGrid', 'resourceTimeline' ],
+            locale: 'pt-br',
+            themeSystem: 'bootstrap',
+            allDaySlot: false,
+            editable: true,
+            selectable: true,
+            slotDuration: '00:30',
+            displayEventTime: true,
+            slotLabelFormat: {
+                hour: '2-digit',
+                minute: '2-digit',
+                timeformat: 'H:mm',
+            },
+            header: {
+                left: 'today prev,next',
+                center: 'title',
+                right: 'timeGridDay,resourceTimelineThreeDays,timeGridWeek,dayGridMonth'
+            },
+            defaultView: 'timeGridDay',
+            views: {
+                resourceTimelineThreeDays: {
+                    type: 'timeGridWeek',
+                    duration: { days: 3 },
+                    buttonText: '3 dias'
+                }
+            },
+            timeZone: 'America/Maceio',
+            events:"{% url 'appointments_ajax' %}",
+            select: function(info) {
+                window.location.href = `{% url 'appointment_create' %}?start=${info.start.toISOString()}&end=${info.end.toISOString()}`;
+            },
+            eventRender: function(info) {
+                info.el.childNodes[0].style['background-color'] = info.event.extendedProps.bgcolor;
+            },
+            eventClick: function (info) {
+
+                var buttons = {
+                    editar: {
+                        label: 'Editar',
+                        className: 'btn-success',
+                        callback: function () {
+                            window.location.href = `/agenda/atualizar/agendamento/${info.event.id}/`;
+                        },
                     }
-                },
-                events:"{% url 'appointments_ajax' %}",
-                select: function(info) {
-                    var start = `${info.start.getDate()}-${info.start.getMonth() + 1}-${info.start.getFullYear()} ${info.start.getHours()}:${info.start.getMinutes()}`;
-                    var end = `${info.end.getDay()}-${info.end.getMonth()}-${info.end.getFullYear()} ${info.end.getHours()}:${info.end.getMinutes()}`;
-                    window.location.href = `{% url 'appointment_create' %}?start=${start}&end=${end}`;
-                },
-                eventClick: function (info) {
+                };
 
-                    var buttons = {
-                        danger: {
-                            label: 'Editar',
-                            className: 'btn-success',
-                            callback: function () {
-                                window.location.href = `/agenda/update/agendamento/${info.event.id}/`;
-                            },
-                        }
-                    };
+                var appointment_status = info.event.extendedProps.status,
+                    status_msg = '';
 
-                    var appointment_status = info.event.extendedProps.status,
-                        status_msg = '';
-
-                    if (appointment_status === 'scheduled') {
-                        status_msg = '<span badge badge-primary>Agendado</span> <br/>';
-                        status_msg += `<b>Mudar Status para:</b> <button class="btn btn-sm btn-success">Atendido</button>`;
-                        status_msg += `&nbsp <button class="btn btn-sm btn-danger">Cancelado</button>`;
-                        status_msg += `&nbsp <button class="btn btn-sm btn-warning">Não Compareceu</button>`;
-                    } else if (appointment_status === 'cancelled') {
-                        status_msg = '<span>Cancelado</span>';
-                    } else if (appointment_status === 'answered') {
-                        status_msg = '<span>Atendido</span>';
-                    }
-
-                    bootbox.dialog({
-                        title: 'Agendamento para ' + info.event.extendedProps.patient__name,
-                        message: '<b>Data: </b>' + info.event.start.toLocaleDateString() + '<br/>' +
-                            '<b>Observações: </b>' + info.event.extendedProps.notes + '<br/>' +
-                            '<b>Status: </b>' + status_msg + '<br/>',
-                        className: 'bootbox-lg',
-                        onEscape: true,
-                        buttons: buttons
-                    });
+                if (appointment_status === 'scheduled') {
+                    status_msg = '<span class="badge badge-primary">Agendado</span> <br/>';
+                    status_msg += `<b>Mudar Status para:</b> <button class="btn btn-sm btn-success" onclick="set_appointment_ajax(${info.event.id}, 'answered')">Atendido</button>`;
+                    status_msg += `&nbsp <button class="btn btn-sm btn-danger" onclick="set_appointment_ajax(${info.event.id}, 'cancelled')">Cancelado</button>`;
+                    status_msg += `&nbsp <button class="btn btn-sm btn-warning" onclick="set_appointment_ajax(${info.event.id}, 'did-not-attend')">Não Compareceu</button>`;
+                } else if (appointment_status === 'cancelled') {
+                    status_msg = '<span class="badge badge-danger">Cancelado</span> <br/>';
+                    status_msg += `<b>Mudar Status para:</b> <button class="btn btn-sm btn-primary" onclick="set_appointment_ajax(${info.event.id}, 'scheduled')">Agendado</button>`;
+                    status_msg += `&nbsp <button class="btn btn-sm btn-success" onclick="set_appointment_ajax(${info.event.id}, 'answered')">Atendido</button>`;
+                    status_msg += `&nbsp <button class="btn btn-sm btn-warning" onclick="set_appointment_ajax(${info.event.id}, 'did-not-attend')">Não Compareceu</button>`;
+                } else if (appointment_status === 'answered') {
+                    status_msg = '<span class="badge badge-success">Atendido</span> <br/>';
+                    status_msg += `<b>Mudar Status para:</b> <button class="btn btn-sm btn-primary" onclick="set_appointment_ajax(${info.event.id}, 'scheduled')">Agendado</button>`;
+                    status_msg += `&nbsp <button class="btn btn-sm btn-danger" onclick="set_appointment_ajax(${info.event.id}, 'cancelled')">Cancelado</button>`;
+                    status_msg += `&nbsp <button class="btn btn-sm btn-warning" onclick="set_appointment_ajax(${info.event.id}, 'did-not-attend')">Não Compareceu</button>`;
+                } else  if (appointment_status === 'did-not-attend') {
+                    status_msg = '<span class="badge badge-warning">Não Compareceu</span> <br/>';
+                    status_msg += `<b>Mudar Status para:</b> <button class="btn btn-sm btn-primary" onclick="set_appointment_ajax(${info.event.id}, 'scheduled')">Agendado</button>`;
+                    status_msg += `&nbsp <button class="btn btn-sm btn-success" onclick="set_appointment_ajax(${info.event.id}, 'answered')">Atendido</button>`;
+                    status_msg += `&nbsp <button class="btn btn-sm btn-danger" onclick="set_appointment_ajax(${info.event.id}, 'cancelled')">Cancelado</button>`;
                 }
 
-            });
-            calendar.render();
+                bootbox.dialog({
+                    title: 'Agendamento para ' + info.event.extendedProps.patient__name,
+                    message: '<b>Data: </b>' + info.event.start.toLocaleDateString() + '<br/>' +
+                        '<b>Observações: </b>' + info.event.extendedProps.notes + '<br/>' +
+                        '<b>Status: </b>' + status_msg + '<br/>',
+                    className: 'bootbox-lg',
+                    onEscape: true,
+                    buttons: buttons
+                });
+            }
+
         });
+        calendar.render();
+
+        function set_appointment_ajax(appointment_id, status) {
+            $.ajax({
+                url: "{% url 'set_appointment_status_ajax' %}",
+                type: "POST",
+                data: {
+                    "appointment_id": appointment_id,
+                    "status": status,
+                    "csrfmiddlewaretoken": '{{ csrf_token }}'
+                },
+                success: function (res) {
+                    if(res.status === 'success'){
+                        calendar.removeAllEvents();
+                        calendar.refetchEvents();
+                        bootbox.hideAll();
+                    }
+                }
+            })
+        }
 
     </script>
 
