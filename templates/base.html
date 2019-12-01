@@ -47,19 +47,18 @@
                 <span>Pacientes</span></a>
         </li>
 
-        <!-- Nav Item - Pages Collapse Menu -->
         <li class="nav-item {{ medicinePage }}">
-            <a class="nav-link" href="{% url 'remedios' %}">
-                <i class="fas fa-fw fa-prescription-bottle-alt"></i>
-                <span>Remédios</span>
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                <i class="fas fa-fw fa-cog"></i>
+                <span>Farmácia</span>
             </a>
-        </li>
-
-        <li class="nav-item">
-            <a class="nav-link" href="#">
-                <i class="fas fa-fw fa-notes-medical"></i>
-                <span>Estoque</span>
-            </a>
+            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <a class="collapse-item" href="{% url 'categories' %}">Categorias</a>
+                    <a class="collapse-item" href="{% url 'medicines' %}">Remédios</a>
+                    <a class="collapse-item" href="{% url 'estoque' %}">Estoque</a>
+                </div>
+            </div>
         </li>
 
         <li class="nav-item">
