@@ -11,7 +11,7 @@
 {% block header %}
     <h2>
         Remédios &nbsp
-        <a href="" class="btn btn-sm btn-primary"><i class="fa fa-plus"></i>&nbsp  Cadastrar Remédio</a>
+        <a href="{% url 'medicine_create' %}" class="btn btn-sm btn-primary"><i class="fa fa-plus"></i>&nbsp  Cadastrar Remédio</a>
     </h2>
 {% endblock %}
 
@@ -31,9 +31,9 @@
                         <tr>
                             <td>{{ medicine.name }}</td>
                             <td>
-                                <form method="post" action="" class="p-0 m-0">
+                                <form method="post" action="{% url 'medicine_delete' medicine.id %}" class="p-0 m-0">
                                     {% csrf_token %}
-                                    <a href="" class="btn btn-write btn-sm">
+                                    <a href="{% url 'medicine_update' medicine.id %}" class="btn btn-write btn-sm">
                                         <i class="fa fa-fw fa-edit"></i>
                                     </a>
                                     <button type="submit" class="btn btn-write btn-sm" onclick="return confirm('Você tem certeza que deseja remover?');">

@@ -4,9 +4,15 @@ from django.db import models
 class Illness(models.Model):
     name = models.CharField('Doença', max_length=100)
 
+    def __str__(self):
+        return self.name
+
 
 class MedicineCategory(models.Model):
     name = models.CharField('Categoria', max_length=50)
+
+    def __str__(self):
+        return self.name
 
 
 class Medicine(models.Model):

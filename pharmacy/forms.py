@@ -19,3 +19,16 @@ class IllnessForm(forms.ModelForm):
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'})
         }
+
+
+class MedicineForm(forms.ModelForm):
+    class Meta:
+        model = Medicine
+        fields = ('name', 'category', 'illness', 'composition', 'volume', )
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'category': forms.Select(attrs={'class':  'form-control'}),
+            'illness': forms.SelectMultiple(attrs={'class': 'form-control'}),
+            'composition': forms.Textarea(attrs={'class': 'form-control'}),
+            'volume': forms.NumberInput(attrs={'class': 'form-control'})
+        }

@@ -4,6 +4,9 @@ from .views import *
 
 urlpatterns = [
     path('remedios/', MedicineListView.as_view(), name='medicines'),
+    path('remedio/criar/', MedicineCreateView.as_view(), name='medicine_create'),
+    path('remedio/editar/<int:pk>/', MedicineUpdateView.as_view(), name='medicine_update'),
+    path('remedio/excluir/<int:pk>/', MedicineDeleteView.as_view(), name='medicine_delete'),
 
     path('categorias/', MedicineCategoryListView.as_view(), name='categories'),
     path('categoria/criar/', MedicineCategoryCreateView.as_view(), name='category_create'),

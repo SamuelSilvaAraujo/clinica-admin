@@ -3,7 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
 
 from .models import Medicine, MedicineCategory, Lote, Illness
-from .forms import MedicineCategoryForm, IllnessForm
+from .forms import MedicineCategoryForm, IllnessForm, MedicineForm
 
 
 class MedicineCategoryListView(LoginRequiredMixin, ListView):
@@ -114,3 +114,39 @@ class MedicineListView(LoginRequiredMixin, ListView):
         context = super(MedicineListView, self).get_context_data(**kwargs)
         context["pharmacyPage"] = "active"
         return context
+
+
+class MedicineCreateView(LoginRequiredMixin, CreateView):
+    template_name = 'medicine/form.html'
+    model = Medicine
+    form_class = MedicineForm
+
+    def get_context_data(self, **kwargs):
+        context = super(MedicineCreateView, self).get_context_data(**kwargs)
+        context["pharmacyPage"] = "active"
+        return context
+
+    def get_success_url(self):
+        return reverse('medicines')
+
+
+class MedicineUpdateView(LoginRequiredMixin, UpdateView):
+    template_name = 'medicine/form.html'
+    model = Medicine
+    form_class = MedicineForm
+
+    def get_context_data(self, **kwargs):
+        context = super(MedicineUpdateView, self).get_context_data(**kwargs)
+        context["pharmacyPage"] = "active"
+        return context
+
+    def get_success_url(self):
+        return reverse('medicines')
+
+
+class MedicineDeleteView(LoginRequiredMixin, DeleteView):
+    model = Medicine
+
+    def get_success_url(self):
+        return reverse('medicines')
+
