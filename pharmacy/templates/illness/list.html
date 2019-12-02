@@ -10,8 +10,8 @@
 
 {% block header %}
     <h2>
-        Remédios &nbsp
-        <a href="" class="btn btn-sm btn-primary"><i class="fa fa-plus"></i>&nbsp  Cadastrar Remédio</a>
+        Doenças &nbsp
+        <a href="{% url 'illness_create' %}" class="btn btn-sm btn-primary"><i class="fa fa-plus"></i>&nbsp  Cadastrar Doença</a>
     </h2>
 {% endblock %}
 
@@ -22,18 +22,20 @@
                 <table class="table" id="dataTable">
                     <thead>
                     <tr>
-                        <th>Remédio</th>
-                        <th style="width: 10%"></th>
+                        <th>Doença</th>
+                        <th style="width: 15%"></th>
                     </tr>
                     </thead>
                     <tbody>
-                    {% for medicine in object_list %}
+                    {% for doenca in object_list %}
                         <tr>
-                            <td>{{ medicine.name }}</td>
                             <td>
-                                <form method="post" action="" class="p-0 m-0">
+                                <a href="{% url 'illness_update' doenca.id %}">{{ doenca.name }}</a>
+                            </td>
+                            <td>
+                                <form method="post" action="{% url 'illness_delete' doenca.id %}" class="p-0 m-0">
                                     {% csrf_token %}
-                                    <a href="" class="btn btn-write btn-sm">
+                                    <a href="{% url 'illness_update' doenca.id %}" class="btn btn-write btn-sm">
                                         <i class="fa fa-fw fa-edit"></i>
                                     </a>
                                     <button type="submit" class="btn btn-write btn-sm" onclick="return confirm('Você tem certeza que deseja remover?');">

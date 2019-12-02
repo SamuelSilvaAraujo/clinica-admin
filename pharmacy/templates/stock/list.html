@@ -10,8 +10,8 @@
 
 {% block header %}
     <h2>
-        Remédios &nbsp
-        <a href="" class="btn btn-sm btn-primary"><i class="fa fa-plus"></i>&nbsp  Cadastrar Remédio</a>
+        Estoque &nbsp
+        <a href="" class="btn btn-sm btn-primary"><i class="fa fa-plus"></i>&nbsp  Cadastrar Lote</a>
     </h2>
 {% endblock %}
 
@@ -23,13 +23,17 @@
                     <thead>
                     <tr>
                         <th>Remédio</th>
+                        <th>Data de entrada</th>
+                        <th>Data de vencimento</th>
                         <th style="width: 10%"></th>
                     </tr>
                     </thead>
                     <tbody>
-                    {% for medicine in object_list %}
+                    {% for lote in object_list %}
                         <tr>
-                            <td>{{ medicine.name }}</td>
+                            <td>{{ lote.medicine.name }}</td>
+                            <td>{{ lote.entry_date|date:'d-m-Y' }}</td>
+                            <td>{{ lote.shelf_life_date|date:'d-m-Y' }}</td>
                             <td>
                                 <form method="post" action="" class="p-0 m-0">
                                     {% csrf_token %}
@@ -62,7 +66,7 @@
                     url: '//cdn.datatables.net/plug-ins/1.10.19/i18n/Portuguese-Brasil.json'
                 },
                 columnDefs: [ {
-                    "targets": 1,
+                    "targets": 3,
                     "orderable": false
                 }]
             });

@@ -47,9 +47,9 @@
                 <span>Pacientes</span></a>
         </li>
 
-        <li class="nav-item {{ medicinePage }}">
+        <li class="nav-item {{ pharmacyPage }}">
             <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-                <i class="fas fa-fw fa-cog"></i>
+                <i class="fas fa-fw fa-prescription-bottle-alt"></i>
                 <span>Farmácia</span>
             </a>
             <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
@@ -57,6 +57,7 @@
                     <a class="collapse-item" href="{% url 'categories' %}">Categorias</a>
                     <a class="collapse-item" href="{% url 'medicines' %}">Remédios</a>
                     <a class="collapse-item" href="{% url 'estoque' %}">Estoque</a>
+                    <a class="collapse-item" href="{% url 'illnesses' %}">Doenças</a>
                 </div>
             </div>
         </li>
