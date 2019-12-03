@@ -23,8 +23,8 @@ class Medicine(models.Model):
     volume = models.FloatField('Volume')
 
 
-class Lote(models.Model):
-    medicine = models.ForeignKey(Medicine, on_delete=models.CASCADE)
+class Lot(models.Model):
+    medicine = models.ForeignKey(Medicine, on_delete=models.CASCADE, verbose_name='Remédio')
     amount = models.IntegerField('Quantidade')
     entry_date = models.DateField('Data de Entrada')
     shelf_life_date = models.DateField('Data de Validade')

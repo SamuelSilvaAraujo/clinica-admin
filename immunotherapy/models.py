@@ -1,7 +1,7 @@
 from django.db import models
 
 from patient.models import Patient
-from pharmacy.models import Medicine, Lote
+from pharmacy.models import Medicine, Lot
 
 
 class Immunotherapy(models.Model):
@@ -23,7 +23,7 @@ class Bottle(models.Model):
 
     immunotherapy = models.ForeignKey(Immunotherapy, on_delete=models.CASCADE)
     number = models.IntegerField()
-    lote = models.ForeignKey(Lote, on_delete=models.CASCADE)
+    lote = models.ForeignKey(Lot, on_delete=models.CASCADE)
     status = models.CharField(max_length=15, choices=STATUS_CHOICES)
 
 

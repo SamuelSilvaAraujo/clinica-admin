@@ -1,5 +1,12 @@
 {% extends 'base.html' %}
 
+{% load static %}
+
+{% block head %}
+    <link href="{% static 'libs/bootstrap-multiselect-master/dist/css/bootstrap-multiselect.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'libs/select2-4.0.12/dist/css/select2.min.css' %}" rel="stylesheet" />
+{% endblock %}
+
 {% block header %}
     <h2>
         {% if form.instance.pk %} Editar {% else %} Cadastrar {% endif %} Remédio
@@ -54,5 +61,28 @@
             </div>
         </div>
     </div>
+
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'libs/bootstrap-multiselect-master/dist/js/bootstrap-multiselect.js' %}"></script>
+    <script src="{% static 'libs/select2-4.0.12/dist/js/select2.min.js' %}"></script>
+    <script src="{% static 'libs/select2-4.0.12/dist/js/i18n/pt-BR.js' %}"></script>
+
+    <script>
+        $('#{{ form.illness.id_for_label }}').multiselect({
+            nonSelectedText: 'Nenhum',
+            filterPlaceholder: 'Buscar',
+            selectAllText: 'Selecionar todos',
+            allSelectedText: 'Todos',
+            buttonWidth: '100%',
+            includeSelectAllOption: true,
+        });
+
+        $('#{{ form.category.id_for_label }}').select2({
+            locale: 'pt-BR',
+        })
+
+    </script>
 
 {% endblock %}

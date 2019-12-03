@@ -18,5 +18,6 @@ urlpatterns = [
     path('doenca/editar/<int:pk>/', IllnessUpdateView.as_view(), name='illness_update'),
     path('doenca/excluir/<int:pk>/', IllnessDeleteView.as_view(), name='illness_delete'),
 
-    path('estoque/', StockListView.as_view(), name='estoque')
+    path('estoque/', StockListView.as_view(), name='stock'),
+    path('estoque/criar/lote/', StockLotCreateView.as_view(), name='lot_create')
 ]
