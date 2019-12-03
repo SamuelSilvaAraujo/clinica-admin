@@ -19,5 +19,7 @@ urlpatterns = [
     path('doenca/excluir/<int:pk>/', IllnessDeleteView.as_view(), name='illness_delete'),
 
     path('estoque/', StockListView.as_view(), name='stock'),
-    path('estoque/criar/lote/', StockLotCreateView.as_view(), name='lot_create')
+    path('estoque/criar/lote/', StockLotCreateView.as_view(), name='lot_create'),
+    path('estoque/editar/lote/<int:pk>/', StockLotUpdateView.as_view(), name='lot_update'),
+    path('estoque/excluir/lote/<int:pk>/', StockLotDeleteView.as_view(), name='lot_delete'),
 ]

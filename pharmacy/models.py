@@ -22,10 +22,13 @@ class Medicine(models.Model):
     composition = models.TextField('Composição')
     volume = models.FloatField('Volume')
 
+    def __str__(self):
+        return self.name
+
 
 class Lot(models.Model):
+    number = models.TextField('Número')
     medicine = models.ForeignKey(Medicine, on_delete=models.CASCADE, verbose_name='Remédio')
     amount = models.IntegerField('Quantidade')
     entry_date = models.DateField('Data de Entrada')
     shelf_life_date = models.DateField('Data de Validade')
-    number = models.IntegerField('Número')

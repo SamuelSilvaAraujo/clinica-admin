@@ -2,6 +2,8 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
 
+from datetime import datetime
+
 from .models import Medicine, MedicineCategory, Lot, Illness
 from .forms import MedicineCategoryForm, IllnessForm, MedicineForm, LotForm
 
@@ -57,7 +59,7 @@ class IllnessListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super(IllnessListView, self).get_context_data(**kwargs)
-        context["pharmacyPage"] = "active"
+        context["illnessPage"] = "active"
         return context
 
 
@@ -68,7 +70,7 @@ class IllnessCreateView(LoginRequiredMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super(IllnessCreateView, self).get_context_data(**kwargs)
-        context["pharmacyPage"] = "active"
+        context["illnessPage"] = "active"
         return context
 
     def get_success_url(self):
@@ -82,7 +84,7 @@ class IllnessUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(IllnessUpdateView, self).get_context_data(**kwargs)
-        context["pharmacyPage"] = "active"
+        context["illnessPage"] = "active"
         return context
 
     def get_success_url(self):
@@ -115,6 +117,35 @@ class StockLotCreateView(LoginRequiredMixin, CreateView):
         context = super(StockLotCreateView, self).get_context_data(**kwargs)
         context["pharmacyPage"] = "active"
         return context
+
+    def get_success_url(self):
+        return reverse('stock')
+
+
+class StockLotUpdateView(LoginRequiredMixin, UpdateView):
+    model = Lot
+    template_name = 'stock/form.html'
+    form_class = LotForm
+
+    def get_context_data(self, **kwargs):
+        context = super(StockLotUpdateView, self).get_context_data(**kwargs)
+        context["pharmacyPage"] = "active"
+        return context
+
+    def get_initial(self):
+        initial = super(StockLotUpdateView, self).get_initial()
+        initial = initial.copy()
+        lot = Lot.objects.get(pk=self.object.pk)
+        initial['entry_date'] = lot.entry_date.strftime('%d-%m-%Y')
+        initial['shelf_life_date'] = lot.shelf_life_date.strftime('%d-%m-%Y')
+        return initial
+
+    def get_success_url(self):
+        return reverse('stock')
+
+
+class StockLotDeleteView(LoginRequiredMixin, DeleteView):
+    model = Lot
 
     def get_success_url(self):
         return reverse('stock')

@@ -57,9 +57,14 @@
                     <a class="collapse-item" href="{% url 'categories' %}">Categorias</a>
                     <a class="collapse-item" href="{% url 'medicines' %}">Remédios</a>
                     <a class="collapse-item" href="{% url 'stock' %}">Estoque</a>
-                    <a class="collapse-item" href="{% url 'illnesses' %}">Doenças</a>
                 </div>
             </div>
+        </li>
+
+        <li class="nav-item {{ illnessPage }}">
+            <a class="nav-link" href="{% url 'illnesses' %}">
+                <i class="fas fa-fw fa-diagnoses"></i>
+                <span>Doenças</span></a>
         </li>
 
         <li class="nav-item">

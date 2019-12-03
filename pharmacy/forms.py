@@ -28,20 +28,24 @@ class MedicineForm(forms.ModelForm):
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),
             'category': forms.Select(attrs={'class':  'form-control'}),
-            'illness': forms.SelectMultiple(attrs={'class': 'form-control'}),
+            'illness': forms.SelectMultiple(attrs={'class': ''}),
             'composition': forms.Textarea(attrs={'class': 'form-control'}),
             'volume': forms.NumberInput(attrs={'class': 'form-control'})
         }
 
 
 class LotForm(forms.ModelForm):
+    entry_date = forms.DateField(label='Data de Entrada', input_formats=['%d-%m-%Y'],
+                                 widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': '__/__/____'}))
+
+    shelf_life_date = forms.DateField(label='Data de Validade', input_formats=['%d-%m-%Y'],
+                                      widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': '__/__/____'}))
+
     class Meta:
         model = Lot
         fields = ('medicine', 'amount', 'entry_date', 'shelf_life_date', 'number')
         widgets = {
             'medicine': forms.Select(attrs={'class': 'form-control'}),
             'amount': forms.NumberInput(attrs={'class': 'form-control'}),
-            'entry_date': forms.DateInput(attrs={'class': 'form-control'}),
-            'shelf_life_date': forms.DateInput(attrs={'class': 'form-control'}),
-            'number': forms.NumberInput(attrs={'class': 'form-control'}),
+            'number': forms.TextInput(attrs={'class': 'form-control', 'type': 'number'}),
         }

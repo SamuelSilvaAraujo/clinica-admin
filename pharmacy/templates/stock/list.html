@@ -25,19 +25,21 @@
                         <th>Remédio</th>
                         <th>Data de entrada</th>
                         <th>Data de vencimento</th>
+                        <th>Quantidade</th>
                         <th style="width: 10%"></th>
                     </tr>
                     </thead>
                     <tbody>
-                    {% for lote in object_list %}
+                    {% for lot in object_list %}
                         <tr>
-                            <td>{{ lote.medicine.name }}</td>
-                            <td>{{ lote.entry_date|date:'d-m-Y' }}</td>
-                            <td>{{ lote.shelf_life_date|date:'d-m-Y' }}</td>
+                            <td>{{ lot.medicine.name }}</td>
+                            <td>{{ lot.entry_date|date:'d-m-Y' }}</td>
+                            <td>{{ lot.shelf_life_date|date:'d-m-Y' }}</td>
+                            <td>{{ lot.amount }}</td>
                             <td>
-                                <form method="post" action="" class="p-0 m-0">
+                                <form method="post" action="{% url 'lot_delete' lot.id %}" class="p-0 m-0">
                                     {% csrf_token %}
-                                    <a href="" class="btn btn-write btn-sm">
+                                    <a href="{% url 'lot_update' lot.id %}" class="btn btn-write btn-sm">
                                         <i class="fa fa-fw fa-edit"></i>
                                     </a>
                                     <button type="submit" class="btn btn-write btn-sm" onclick="return confirm('Você tem certeza que deseja remover?');">
