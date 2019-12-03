@@ -46,7 +46,7 @@ class PatientCreateView(LoginRequiredMixin, CreateView):
         patient_name = self.request.GET.get('patient_name')
         if patient_name:
             return '{}?patient_id={}'.format(reverse('appointment_create'), self.object.id)
-        return reverse('patients')
+        return reverse('patient_detail', kwargs={'pk': self.object.id})
 
 
 class PatientUpdateView(LoginRequiredMixin, UpdateView):
