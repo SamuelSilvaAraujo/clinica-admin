@@ -1,8 +1,17 @@
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+
+import re
+import base64
+from io import BytesIO
+from PIL import Image
+from django.core.files import File
+
 from .models import Patient
-from .forms import PatientForm, PhotoForm
+from .forms import PatientForm
 
 
 class PatientListView(LoginRequiredMixin, ListView):
@@ -71,10 +80,21 @@ class PatientDetailView(LoginRequiredMixin, DetailView):
         return context
 
 
-class PatientPhotoUpdate(LoginRequiredMixin, UpdateView):
-    model = Patient
-    template_name = 'patient/detail.html'
-    form_class = PhotoForm
+@login_required()
+def patient_photo_update(request, pk):
+    patient = Patient.objects.get(pk=pk)
 
-    def get_success_url(self):
-        return reverse('patient_detail', kwargs={'pk': self.object.id})
+    if request.POST:
+        image_data = request.POST['image_data']
+        image_data = re.sub("^data:image/png;base64,", "", image_data)
+        image_data = base64.b64decode(image_data)
+        image_data = BytesIO(image_data)
+        im = Image.open(image_data)
+        im = im.convert("RGB")
+
+        blob = BytesIO()
+        im.save(blob, 'JPEG')
+        patient.photo.save('%s.jpg' % patient.id, File(blob), save=False)
+        patient.save()
+        return redirect('patient_detail', pk=patient.id)
+    return render(request, 'patient/change-photo-modal.html', {'patient': patient})

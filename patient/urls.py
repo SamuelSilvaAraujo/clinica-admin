@@ -9,7 +9,7 @@ urlpatterns = [
         path('atualizar/', PatientUpdateView.as_view(), name='patient_update'),
         path('excluir/', PatientDeleteView.as_view(), name='patient_delete'),
         path('perfil/', PatientDetailView.as_view(), name='patient_detail'),
-        path('photo/', PatientPhotoUpdate.as_view(), name='patient_photo'),
+        path('photo/', patient_photo_update, name='patient_photo'),
     ])),
     path('ajax/list/', get_patients_ajax, name='ajax_patients'),
 ]

@@ -1,0 +1,125 @@
+<div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Alterar Foto</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body" id="id-modal-body" style="display: none;">
+    <div id="load-photo" style="display: none">
+        <img id="image" src="" alt="" style="width: 700px; height: 340px">
+    </div>
+
+    <div id="capture-photo" style="display: none; height:340px; width: 640px"></div>
+
+    <form method="post" action="{% url 'patient_photo' patient.id %}" id="photo-form" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="hidden" name="image_data" value="">
+    </form>
+</div>
+<div class="modal-footer">
+    <label class="btn btn-success" for="inputImage">
+        <input type="file" class="sr-only" id="inputImage" name="file" accept=".jpg,.jpeg,.png,.gif,.bmp,.tiff">
+        Carregar Foto
+    </label>
+    <button type="button" class="btn btn-primary" id="capture-photo-button">Tirar com Webcam</button>
+    <button type="button" class="btn btn-primary" id="capture-button" style="display: none">Capturar</button>
+    <button type="button" class="btn btn-primary" style="display: none" id="save-button" onclick="return $('#photo-form').submit()" data-method="getCroppedCanvas" data-option="{ &quot;width&quot;: 320, &quot;height&quot;: 180 }">Salvar</button>
+</div>
+
+<script>
+    $(document).ready(function() {
+
+        Webcam.set({
+            image_format: 'jpeg',
+            jpeg_quality: 90
+        });
+
+        $('#capture-photo-button').click(function () {
+            document.getElementById('id-modal-body').style.display = '';
+            document.getElementById('load-photo').style.display = 'none';
+            document.getElementById('capture-photo').style.display = '';
+            document.getElementById('capture-button').style.display = '';
+            document.getElementById('capture-photo-button').style.display = 'none';
+
+            Webcam.attach( '#capture-photo' );
+        });
+
+        $('#capture-button').click(function () {
+            Webcam.snap( function(data_uri) {
+                document.getElementById('load-photo').style.display = '';
+                document.getElementById('capture-photo').style.display = 'none';
+                document.getElementById('save-button').style.display = '';
+                document.getElementById('capture-button').style.display = 'none';
+                document.getElementById('capture-photo-button').style.display = '';
+                Webcam.reset();
+                $('#image').cropper('destroy').attr('src', data_uri).cropper();
+            })
+
+        });
+
+        $(function () {
+
+            var URL = window.URL || window.webkitURL;
+            var $image = $('#image');
+            var options = {
+                aspectRatio: 16 / 9,
+                preview: '.img-preview'
+            };
+            var uploadedImageName = 'cropped.jpg';
+            var uploadedImageType = 'image/jpeg';
+            var uploadedImageURL;
+
+            // Cropper
+            $image.on().cropper(options);
+
+            var $inputImage = $('#inputImage');
+
+            if (URL) {
+                $inputImage.change(function () {
+                    var files = this.files;
+                    var file;
+
+                    if (!$image.data('cropper')) {
+                        return;
+                    }
+
+                    if (files && files.length) {
+                        file = files[0];
+
+                        if (/^image\/\w+$/.test(file.type)) {
+                            uploadedImageName = file.name;
+                            uploadedImageType = file.type;
+
+                            if (uploadedImageURL) {
+                                URL.revokeObjectURL(uploadedImageURL);
+                            }
+
+                            uploadedImageURL = URL.createObjectURL(file);
+                            $image.cropper('destroy').attr('src', uploadedImageURL).cropper(options);
+                            Webcam.reset();
+                            document.getElementById('id-modal-body').style.display = '';
+                            document.getElementById('load-photo').style.display = '';
+                            document.getElementById('save-button').style.display = '';
+                            document.getElementById('capture-photo').style.display = 'none';
+                            document.getElementById('capture-button').style.display = 'none';
+                            document.getElementById('capture-photo-button').style.display = '';
+                            $inputImage.val('');
+                        } else {
+                            window.alert('Please choose an image file.');
+                        }
+                    }
+                });
+            } else {
+                $inputImage.prop('disabled', true).parent().addClass('disabled');
+            }
+        });
+    });
+
+
+    $('#photo-form').submit(function () {
+        var $image = $('#image');
+        var result = $image.cropper('getCroppedCanvas', {width: 800, height: 600});
+        $('#photo-form input[name=image_data]').val(result.toDataURL("image/png"));
+    });
+
+</script>

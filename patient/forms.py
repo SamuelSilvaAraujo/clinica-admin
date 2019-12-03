@@ -25,5 +25,5 @@ class PhotoForm(forms.ModelForm):
         model = Patient
         fields = ('photo', )
         widgets = {
-            'photo': forms.HiddenInput()
+            'photo': forms.FileInput()
         }
