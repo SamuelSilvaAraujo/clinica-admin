@@ -9,7 +9,7 @@
         <img id="image" src="" alt="" style="width: 700px; height: 340px">
     </div>
 
-    <div id="capture-photo" style="display: none; height:340px; width: 640px"></div>
+    <div id="capture-photo" style="display: none; height:340px; width: 100%"></div>
 
     <form method="post" action="{% url 'patient_photo' patient.id %}" id="photo-form" enctype="multipart/form-data">
         {% csrf_token %}
@@ -40,6 +40,7 @@
             document.getElementById('capture-photo').style.display = '';
             document.getElementById('capture-button').style.display = '';
             document.getElementById('capture-photo-button').style.display = 'none';
+            document.getElementById('save-button').style.display = 'none';
 
             Webcam.attach( '#capture-photo' );
         });
