@@ -32,3 +32,6 @@ class Lot(models.Model):
     amount = models.IntegerField('Quantidade')
     entry_date = models.DateField('Data de Entrada')
     shelf_life_date = models.DateField('Data de Validade')
+
+    class Meta:
+        ordering = ['entry_date', 'shelf_life_date']

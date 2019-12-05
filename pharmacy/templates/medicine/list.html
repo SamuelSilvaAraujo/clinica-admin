@@ -29,7 +29,9 @@
                     <tbody>
                     {% for medicine in object_list %}
                         <tr>
-                            <td>{{ medicine.name }}</td>
+                            <td>
+                                <a href="{% url 'medicine_detail' medicine.id %}">{{ medicine.name }}</a>
+                            </td>
                             <td>
                                 <form method="post" action="{% url 'medicine_delete' medicine.id %}" class="p-0 m-0">
                                     {% csrf_token %}

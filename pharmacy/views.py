@@ -1,8 +1,6 @@
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
-
-from datetime import datetime
 
 from .models import Medicine, MedicineCategory, Lot, Illness
 from .forms import MedicineCategoryForm, IllnessForm, MedicineForm, LotForm
@@ -195,3 +193,12 @@ class MedicineDeleteView(LoginRequiredMixin, DeleteView):
     def get_success_url(self):
         return reverse('medicines')
 
+
+class MedicineDetailView(LoginRequiredMixin, DetailView):
+    model = Medicine
+    template_name = 'medicine/detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(MedicineDetailView, self).get_context_data(**kwargs)
+        context["pharmacyPage"] = "active"
+        return context

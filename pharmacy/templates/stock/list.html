@@ -22,6 +22,7 @@
                 <table class="table" id="dataTable">
                     <thead>
                     <tr>
+                        <th>Numero</th>
                         <th>Remédio</th>
                         <th>Data de entrada</th>
                         <th>Data de vencimento</th>
@@ -32,6 +33,7 @@
                     <tbody>
                     {% for lot in object_list %}
                         <tr>
+                            <td>{{ lot.number }}</td>
                             <td>{{ lot.medicine.name }}</td>
                             <td>{{ lot.entry_date|date:'d-m-Y' }}</td>
                             <td>{{ lot.shelf_life_date|date:'d-m-Y' }}</td>
