@@ -5,25 +5,33 @@ from pharmacy.models import Medicine, Lot
 
 
 class Immunotherapy(models.Model):
+    FINISHED = 'finished'
+    IN_PROGRESS = 'in-progress'
+
+    STATUS_CHOICES = (
+        (FINISHED, 'Finalizado'),
+        (IN_PROGRESS, 'Em Andamento')
+    )
+
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
     medicine = models.ForeignKey(Medicine, on_delete=models.CASCADE)
-    start = models.DateField()
-    end = models.DateField()
-    total = models.IntegerField()
+    start_date = models.DateField()
+    total_applications = models.IntegerField()
+    status = models.CharField(choices=STATUS_CHOICES, max_length=20)
 
 
 class Bottle(models.Model):
-    USING = 'using'
+    IN_USE = 'in-use'
     USED = 'used'
 
     STATUS_CHOICES = (
-        (USING, 'Usando'),
+        (IN_USE, 'Em uso'),
         (USED, 'usado')
     )
 
     immunotherapy = models.ForeignKey(Immunotherapy, on_delete=models.CASCADE)
-    number = models.IntegerField()
-    lote = models.ForeignKey(Lot, on_delete=models.CASCADE)
+    bottle_number = models.IntegerField()
+    lot = models.ForeignKey(Lot, on_delete=models.CASCADE)
     status = models.CharField(max_length=15, choices=STATUS_CHOICES)
 
 
