@@ -53,3 +53,13 @@ class ImmunotherapyDeleteView(LoginRequiredMixin, DeleteView):
 
     def get_success_url(self):
         return reverse('immunotherapy')
+
+
+class ImmunotherapyDetailView(LoginRequiredMixin, DetailView):
+    model = Immunotherapy
+    template_name = 'immunotherapy/detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ImmunotherapyDetailView, self).get_context_data(**kwargs)
+        context["immunotherapyPage"] = "active"
+        return context

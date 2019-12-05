@@ -16,43 +16,47 @@
 {% endblock %}
 
 {% block content %}
-    <div class="card mb-4">
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table" id="dataTable">
-                    <thead>
-                    <tr>
-                        <th>Paciente</th>
-                        <th>Remedio</th>
-                        <th>Data de Inicio</th>
-                        <th>Status</th>
-                        <th style="width: 10%"></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for imuno in object_list %}
-                        <tr>
-                            <td>
-                                <a href="">{{ imuno.patient.name }}</a>
-                            </td>
-                            <td>{{ imuno.medicine.name }}</td>
-                            <td>{{ imuno.start_date|date:'d/m/Y' }}</td>
-                            <td>{{ imuno.get_status_display}}</td>
-                            <td>
-                                <form method="post" action="{% url 'immunotherapy_delete' imuno.id %}" class="p-0 m-0">
-                                    {% csrf_token %}
-                                    <a href="{% url 'immunotherapy_update' imuno.id %}" class="btn btn-write btn-sm">
-                                        <i class="fa fa-fw fa-edit"></i>
-                                    </a>
-                                    <button type="submit" class="btn btn-write btn-sm" onclick="return confirm('Você tem certeza que deseja remover?');">
-                                        <i class="fa fa-fw fa-trash"></i>
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table" id="dataTable">
+                            <thead>
+                            <tr>
+                                <th>Paciente</th>
+                                <th>Remedio</th>
+                                <th>Data de Inicio</th>
+                                <th>Status</th>
+                                <th style="width: 10%"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for imuno in object_list %}
+                                <tr>
+                                    <td>
+                                        <a href="{% url 'immunotherapy_detail' imuno.id %}">{{ imuno.patient.name }}</a>
+                                    </td>
+                                    <td>{{ imuno.medicine.name }}</td>
+                                    <td>{{ imuno.start_date|date:'d/m/Y' }}</td>
+                                    <td>{{ imuno.get_status_display}}</td>
+                                    <td>
+                                        <form method="post" action="{% url 'immunotherapy_delete' imuno.id %}" class="p-0 m-0">
+                                            {% csrf_token %}
+                                            <a href="{% url 'immunotherapy_update' imuno.id %}" class="btn btn-write btn-sm">
+                                                <i class="fa fa-fw fa-edit"></i>
+                                            </a>
+                                            <button type="submit" class="btn btn-write btn-sm" onclick="return confirm('Você tem certeza que deseja remover?');">
+                                                <i class="fa fa-fw fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

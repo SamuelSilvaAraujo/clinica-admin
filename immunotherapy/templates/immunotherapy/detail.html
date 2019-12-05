@@ -1,0 +1,167 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block head %}
+
+    <link href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet" type="text/css">
+
+{% endblock %}
+
+{% block header %}
+    <h2>
+        {{ immunotherapy.patient.name }}&nbsp
+        <a href="" class="btn btn-sm btn-primary"><i class="fa fa-plus"></i>&nbsp  Cadastrar Frasco</a>&nbsp
+        <a href="" class="btn btn-sm btn-primary"><i class="fa fa-plus"></i>&nbsp  Cadastrar Aplicação</a>
+    </h2>
+{% endblock %}
+
+{% block content %}
+
+    <div class="row mb-4">
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header pb-0 bg-primary">
+                    <h5 class="card-title text-white">Remédio</h5>
+                </div>
+                <div class="card-body pb-0">
+                    <p>{{ immunotherapy.medicine.name }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="card">
+                <div class="card-header pb-0 bg-primary">
+                    <h5 class="card-title text-white">Data de ínicio</h5>
+                </div>
+                <div class="card-body pb-0">
+                    <p>{{ immunotherapy.start_date|date:'d/m/Y' }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2">
+            <div class="card">
+                <div class="card-header pb-0 bg-primary">
+                    <h5 class="card-title text-white">Aplicações</h5>
+                </div>
+                <div class="card-body pb-0 text-center">
+                    <p>{{ immunotherapy.total_applications }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="card">
+                <div class="card-header pb-0 bg-primary">
+                    <h5 class="card-title text-white">Aplicações / frasco</h5>
+                </div>
+                <div class="card-body pb-0 text-center">
+                    <p>2</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {#    <div class="row mb-4">#}
+    {#        <div class="col-lg-12">#}
+    {#            <div class="card">#}
+    {#                <div class="card-header pb-0 bg-primary">#}
+    {#                    <h5 class="card-title text-white">Frasco em uso</h5>#}
+    {#                </div>#}
+    {#                <div class="card-body text-center">#}
+    {#                    Numero: 124554554, Lote: 2584711525#}
+    {#                </div>#}
+    {#            </div>#}
+    {#        </div>#}
+    {#    </div>#}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card mb-4">
+                <div class="card-header pb-0 bg-primary">
+                    <h5 class="card-title text-white">Aplicações</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table" id="applicationTable">
+                            <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Aplicador</th>
+                                <th>Dosagem</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for botten in immunotherapy.bottle_set.all %}
+                                {% for application in botten.application_set.all %}
+                                    <tr>
+                                        <td>{{ application.date|date:'d/m/Y' }}</td>
+                                        <td>{{ application.applicator }}</td>
+                                        <td>{{ application.dosage }}</td>
+                                    </tr>
+                                {% endfor %}
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card mb-4">
+                <div class="card-header pb-0 bg-primary">
+                    <h5 class="card-title text-white">Fracos</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table" id="bottenTable">
+                            <thead>
+                            <tr>
+                                <th>Numero</th>
+                                <th>Lote</th>
+                                <th>Status</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for botten in immunotherapy.bottle_set.all %}
+                                <tr>
+                                    <td>{{ botten.number }}</td>
+                                    <td>{{ botten.lot }}</td>
+                                    <td>{{ botten.status }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block script %}
+
+    <script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('#applicationTable').DataTable({
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.10.19/i18n/Portuguese-Brasil.json'
+                }
+            });
+
+            $('#bottenTable').DataTable({
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.10.19/i18n/Portuguese-Brasil.json'
+                },
+            });
+        });
+    </script>
+
+{% endblock %}
