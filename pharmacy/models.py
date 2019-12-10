@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Q, Count, F
 
 
 class Illness(models.Model):
@@ -17,13 +18,26 @@ class MedicineCategory(models.Model):
 
 class Medicine(models.Model):
     name = models.CharField('Remédio', max_length=100)
-    category = models.ForeignKey(MedicineCategory, on_delete=models.SET_NULL, null=True)
+    category = models.ForeignKey(MedicineCategory, on_delete=models.SET_NULL, null=True, verbose_name='Categoria')
     illness = models.ManyToManyField(Illness, verbose_name='Doenças', blank=True)
     composition = models.TextField('Composição')
     volume = models.FloatField('Volume')
 
     def __str__(self):
         return self.name
+
+
+class LotQuerySet(models.QuerySet):
+    def all_in_stock_queryset(self):
+        return self.annotate(in_stock=F('amount') - Count('bottle')).filter(in_stock__gt=0)
+
+
+class LotManager(models.Manager):
+    def get_queryset(self):
+        return LotQuerySet(self.model, using=self._db)
+
+    def all_in_stock(self):
+        return self.get_queryset().all_in_stock_queryset()
 
 
 class Lot(models.Model):
@@ -33,5 +47,14 @@ class Lot(models.Model):
     entry_date = models.DateField('Data de Entrada')
     shelf_life_date = models.DateField('Data de Validade')
 
+    objects = LotManager()
+
     class Meta:
         ordering = ['entry_date', 'shelf_life_date']
+
+    def __str__(self):
+        return "{} ({})".format(self.number, self.current_amount())
+
+    def current_amount(self):
+        all_bottle = self.bottle_set.all()
+        return self.amount - all_bottle.count()

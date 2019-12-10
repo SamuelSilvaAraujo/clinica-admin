@@ -10,4 +10,6 @@ urlpatterns = [
     path('excluir/<int:pk>/', ImmunotherapyDeleteView.as_view(), name='immunotherapy_delete'),
     path('detalhe/<int:pk>/', ImmunotherapyDetailView.as_view(), name='immunotherapy_detail'),
 
+    path('<int:immunotherapy_id>/adiconar/frasco/', BottleCreateView.as_view(), name='bottle_create')
+
 ]

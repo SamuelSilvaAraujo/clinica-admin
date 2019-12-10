@@ -29,6 +29,13 @@ class PatientCreateView(LoginRequiredMixin, CreateView):
     model = Patient
     form_class = PatientForm
 
+    def get_parameters(self):
+        return {
+            'patient': self.request.GET.get('patient_name'),
+            'start': self.request.GET.get('start'),
+            'end': self.request.GET.get('end')
+        }
+
     def get_context_data(self, **kwargs):
         context = super(PatientCreateView, self).get_context_data(**kwargs)
         context["patientsPage"] = "active"
@@ -37,15 +44,17 @@ class PatientCreateView(LoginRequiredMixin, CreateView):
     def get_initial(self):
         initial = super(PatientCreateView, self).get_initial()
         initial = initial.copy()
-        patient_name = self.request.GET.get('patient_name')
+        patient_name = self.get_parameters()['patient']
         if patient_name:
             initial['name'] = patient_name
         return initial
 
     def get_success_url(self):
-        patient_name = self.request.GET.get('patient_name')
+        patient_name = self.get_parameters()['patient']
+        start = self.get_parameters()['start']
+        end = self.get_parameters()['end']
         if patient_name:
-            return '{}?patient_id={}'.format(reverse('appointment_create'), self.object.id)
+            return '{}?patient={}&start={}&end={}'.format(reverse('appointment_create'), self.object.id, start, end)
         return reverse('patient_detail', kwargs={'pk': self.object.id})
 
 

@@ -13,11 +13,14 @@ class Immunotherapy(models.Model):
         (IN_PROGRESS, 'Em Andamento')
     )
 
-    patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
-    medicine = models.ForeignKey(Medicine, on_delete=models.CASCADE)
-    start_date = models.DateField()
-    total_applications = models.IntegerField()
-    status = models.CharField(choices=STATUS_CHOICES, max_length=20)
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, verbose_name='Paciente')
+    medicine = models.ForeignKey(Medicine, on_delete=models.CASCADE, verbose_name='Remédio')
+    start_date = models.DateField('Data de Inicio')
+    total_applications = models.IntegerField('Total de aplicações')
+    status = models.CharField('Status', choices=STATUS_CHOICES, max_length=20, default=IN_PROGRESS)
+
+    def __str__(self):
+        return "{} - {}".format(self.patient.name, self.medicine.name)
 
 
 class Bottle(models.Model):
@@ -30,9 +33,12 @@ class Bottle(models.Model):
     )
 
     immunotherapy = models.ForeignKey(Immunotherapy, on_delete=models.CASCADE)
-    bottle_number = models.IntegerField()
-    lot = models.ForeignKey(Lot, on_delete=models.CASCADE)
-    status = models.CharField(max_length=15, choices=STATUS_CHOICES)
+    bottle_number = models.IntegerField('Numero')
+    lot = models.ForeignKey(Lot, on_delete=models.CASCADE, verbose_name='Lote')
+    status = models.CharField(max_length=15, choices=STATUS_CHOICES, default=IN_USE)
+
+    def __str__(self):
+        return "{}".format(self.bottle_number)
 
 
 class Application(models.Model):

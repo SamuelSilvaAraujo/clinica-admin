@@ -110,7 +110,7 @@
             $id_patient.on('select2:select', function (e) {
                 var data = e.params.data;
                 if (data.id === 'NEW_PATIENT') {
-                    window.location = `{% url 'patient_create' %}?patient_name=${data.name}`;
+                    window.location = `{% url 'patient_create' %}?patient_name=${data.name}&start={{ start }}&end={{ end }}`;
                 }
             });
 

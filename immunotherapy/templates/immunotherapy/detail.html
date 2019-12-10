@@ -11,8 +11,8 @@
 {% block header %}
     <h2>
         {{ immunotherapy.patient.name }}&nbsp
-        <a href="" class="btn btn-sm btn-primary"><i class="fa fa-plus"></i>&nbsp  Cadastrar Frasco</a>&nbsp
-        <a href="" class="btn btn-sm btn-primary"><i class="fa fa-plus"></i>&nbsp  Cadastrar Aplicação</a>
+        <button class="btn btn-sm btn-primary" data-remote="{% url 'bottle_create' immunotherapy.id %}"  data-toggle="modal" data-target="#bottleModal"><i class="fa fa-plus"></i>&nbsp  Cadastrar Frasco</button>&nbsp
+        <button class="btn btn-sm btn-primary"><i class="fa fa-plus"></i>&nbsp  Cadastrar Aplicação</button>
     </h2>
 {% endblock %}
 
@@ -60,19 +60,6 @@
             </div>
         </div>
     </div>
-
-    {#    <div class="row mb-4">#}
-    {#        <div class="col-lg-12">#}
-    {#            <div class="card">#}
-    {#                <div class="card-header pb-0 bg-primary">#}
-    {#                    <h5 class="card-title text-white">Frasco em uso</h5>#}
-    {#                </div>#}
-    {#                <div class="card-body text-center">#}
-    {#                    Numero: 124554554, Lote: 2584711525#}
-    {#                </div>#}
-    {#            </div>#}
-    {#        </div>#}
-    {#    </div>#}
 
     <div class="row">
         <div class="col-lg-12">
@@ -127,9 +114,9 @@
                             <tbody>
                             {% for botten in immunotherapy.bottle_set.all %}
                                 <tr>
-                                    <td>{{ botten.number }}</td>
+                                    <td>{{ botten.bottle_number }}</td>
                                     <td>{{ botten.lot }}</td>
-                                    <td>{{ botten.status }}</td>
+                                    <td>{{ botten.get_status_display }}</td>
                                 </tr>
                             {% endfor %}
                             </tbody>
@@ -140,6 +127,11 @@
         </div>
     </div>
 
+    <div class="modal inmodal fade" id="bottleModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content animated bounceInRight"></div>
+        </div>
+    </div>
 
 {% endblock %}
 
@@ -161,6 +153,11 @@
                     url: '//cdn.datatables.net/plug-ins/1.10.19/i18n/Portuguese-Brasil.json'
                 },
             });
+
+            $('body').on('click', '[data-toggle="modal"]', function(){
+                $($(this).data("target")+' .modal-content').load($(this).data("remote"));
+            });
+
         });
     </script>
 

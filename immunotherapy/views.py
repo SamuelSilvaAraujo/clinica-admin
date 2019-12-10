@@ -2,8 +2,8 @@ from django.urls import reverse
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from .models import Immunotherapy
-from .forms import ImmunotherapyForm
+from .models import Immunotherapy, Bottle
+from .forms import ImmunotherapyForm, BottleForm
 
 
 class ImmunotherapyListView(LoginRequiredMixin, ListView):
@@ -25,10 +25,6 @@ class ImmunotherapyCreateView(LoginRequiredMixin, CreateView):
         context = super(ImmunotherapyCreateView, self).get_context_data(**kwargs)
         context["immunotherapyPage"] = "active"
         return context
-
-    def form_valid(self, form):
-        form.instance.status = Immunotherapy.IN_PROGRESS
-        return super().form_valid(form)
 
     def get_success_url(self):
         return reverse('immunotherapy')
@@ -63,3 +59,31 @@ class ImmunotherapyDetailView(LoginRequiredMixin, DetailView):
         context = super(ImmunotherapyDetailView, self).get_context_data(**kwargs)
         context["immunotherapyPage"] = "active"
         return context
+
+
+class BottleCreateView(LoginRequiredMixin, CreateView):
+    model = Bottle
+    template_name = 'bottle/form-modal.html'
+    form_class = BottleForm
+
+    def get_immunotherapy(self):
+        immunotherapy_id = self.kwargs['immunotherapy_id']
+        immunotherapy = Immunotherapy.objects.get(id=immunotherapy_id)
+        return immunotherapy
+
+    def get_context_data(self, **kwargs):
+        context = super(BottleCreateView, self).get_context_data(**kwargs)
+        context["immunotherapy"] = self.get_immunotherapy()
+        return context
+
+    def get_form_kwargs(self, **kwargs):
+        form_kwargs = super(BottleCreateView, self).get_form_kwargs()
+        form_kwargs["immunotherapy"] = self.get_immunotherapy()
+        return form_kwargs
+
+    def form_valid(self, form):
+        form.instance.immunotherapy = self.get_immunotherapy()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('immunotherapy_detail', kwargs={'pk': self.kwargs['immunotherapy_id']})

@@ -24,20 +24,29 @@ class AppointmentCreateView(LoginRequiredMixin, CreateView):
     model = Appointment
     form_class = AppointmentForm
 
+    def get_parameters(self):
+        return {
+            'start': self.request.GET.get('start'),
+            'end': self.request.GET.get('end'),
+            'patient': self.request.GET.get('patient')
+        }
+
     def get_context_data(self, **kwargs):
         context = super(AppointmentCreateView, self).get_context_data(**kwargs)
         context["schedulePage"] = "active"
-        patient_id = self.request.GET.get('patient_id')
+        patient_id = self.get_parameters()['patient']
         if patient_id:
             patient = Patient.objects.get(id=patient_id)
             context["patient"] = patient
+        context["start"] = self.get_parameters()['start']
+        context["end"] = self.get_parameters()['end']
         return context
 
     def get_initial(self):
         initial = super(AppointmentCreateView, self).get_initial()
         initial = initial.copy()
-        start = datetime.strptime(self.request.GET.get('start'), "%Y-%m-%dT%H:%M:%S.%fZ")
-        end = datetime.strptime(self.request.GET.get('end'), "%Y-%m-%dT%H:%M:%S.%fZ")
+        start = datetime.strptime(self.get_parameters()['start'], "%Y-%m-%dT%H:%M:%S.%fZ")
+        end = datetime.strptime(self.get_parameters()['end'], "%Y-%m-%dT%H:%M:%S.%fZ")
         initial['date'] = start.date().strftime('%d/%m/%Y')
         initial['start_hour'] = start.time()
         initial['end_hour'] = end.time()
