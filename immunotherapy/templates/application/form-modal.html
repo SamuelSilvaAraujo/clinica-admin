@@ -5,20 +5,33 @@
     </button>
 </div>
 <div class="modal-body">
-    <form method="post" action="{% url 'bottle_create' immunotherapy.id %}">
+    <form method="post" action="{% url 'application_create' immunotherapy.id %}">
         {% csrf_token %}
 
         <div class="form-group row">
             <div class="col-md-12">
-                <label for="{{ form.bottle_number.id_for_label }}">{{ form.bottle_number.label }}{% if form.bottle_number.field.required %}*{% endif %}</label>
-                {{ form.bottle_number }}
+                <label for="{{ form.bottle.id_for_label }}">{{ form.bottle.label }}{% if form.bottle.field.required %}*{% endif %}</label>
+                {{ form.bottle }}
             </div>
         </div>
 
         <div class="form-group row">
             <div class="col-md-12">
-                <label for="{{ form.lot.id_for_label }}">{{ form.lot.label }}{% if form.lot.field.required %}*{% endif %}</label>
-                {{ form.lot }}
+                <label for="{{ form.applicator.id_for_label }}">{{ form.applicator.label }}{% if form.applicator.field.required %}*{% endif %}</label>
+                {{ form.applicator }}
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-12">
+                <label for="{{ form.dosage.id_for_label }}">{{ form.dosage.label }}{% if form.dosage.field.required %}*{% endif %}</label>
+                {{ form.dosage }}
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-md-12">
+                <label for="{{ form.date.id_for_label }}">{{ form.date.label }}{% if form.date.field.required %}*{% endif %}</label>
+                {{ form.date }}
             </div>
         </div>
 

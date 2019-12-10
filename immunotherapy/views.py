@@ -2,8 +2,8 @@ from django.urls import reverse
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from .models import Immunotherapy, Bottle
-from .forms import ImmunotherapyForm, BottleForm
+from .models import Immunotherapy, Bottle, Application
+from .forms import ImmunotherapyForm, BottleForm, ApplicationForm
 
 
 class ImmunotherapyListView(LoginRequiredMixin, ListView):
@@ -87,3 +87,22 @@ class BottleCreateView(LoginRequiredMixin, CreateView):
 
     def get_success_url(self):
         return reverse('immunotherapy_detail', kwargs={'pk': self.kwargs['immunotherapy_id']})
+
+
+class ApplicationCreateView(LoginRequiredMixin, CreateView):
+    model = Application
+    template_name = 'application/form-modal.html'
+    form_class = ApplicationForm
+
+    def get_immunotherapy(self):
+        immunotherapy_id = self.kwargs['immunotherapy_id']
+        immunotherapy = Immunotherapy.objects.get(id=immunotherapy_id)
+        return immunotherapy
+
+    def get_context_data(self, **kwargs):
+        context = super(ApplicationCreateView, self).get_context_data(**kwargs)
+        context["immunotherapy"] = self.get_immunotherapy()
+        return context
+
+    def get_success_url(self):
+        return reverse('immunotherapy_detail', kwargs={'pk': self.get_immunotherapy().id})
