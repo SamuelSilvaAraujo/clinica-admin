@@ -16,79 +16,62 @@
 
 {% block content %}
 
-    <div class="row">
-        <div class="col-lg-12 order-lg-2">
-            <ul class="nav nav-tabs">
-                <li class="nav-item">
-                    <a href="#" data-target="#profile" data-toggle="tab" class="nav-link active">Perfil</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" data-target="#stock" data-toggle="tab" class="nav-link">Estoque</a>
-                </li>
-            </ul>
-            <div class="tab-content py-4">
-                <div class="tab-pane active" id="profile">
-                    <div class="row">
-                        <div class="col-md-12">
+    <div class="row mb-4">
+        <div class="col-lg-6">
+            <h5 class="sizes mb-2"><b>Categoria: </b>
+                <span class="" data-toggle="tooltip" title="small">{{ medicine.category.name }}</span> <br>
+            </h5>
 
-                            <h6>
-                                <b>Categoria</b>
-                            </h6>
-                            <p>
-                                {{ medicine.category }}
-                            </p>
-                            <h6>
-                                <b>Doenças tratáveis</b>
-                            </h6>
-                            {% for d in medicine.illness.all %}
-                                <p>
-                                    {{ d.name }}
-                                </p>
-                            {% endfor %}
-                            <h6>
-                                <b>Composição</b>
-                            </h6>
-                            <p>
-                                {{ medicine.composition|default:'Não informado' }}
-                            </p>
-                            <h6>
-                                <b>Volume</b>
-                            </h6>
-                            <p>
-                                {{ medicine.volume|default:'Não informado' }}
-                            </p>
-                        </div>
-                    </div>
+            <h5 class="sizes mb-2"><b>Composição: </b>
+                <span class="" data-toggle="tooltip" title="small"> {{ medicine.composition|default:'Não informado' }}</span> <br>
+            </h5>
+        </div>
+        <div class="col-lg-6">
+            <h5 class="sizes mb-2"><b>Volume: </b>
+                <span class="" data-toggle="tooltip" title="small"> {{ medicine.volume|default:'Não informado' }} ml</span> <br>
+            </h5>
+
+            <h5><b>Doenças tratáveis: </b><br>
+                {% for illness in medicine.illness.all %}
+                    <span class="" data-toggle="tooltip" title="small">{{ illness.name }}</span> <br>
+                {% endfor %}
+            </h5>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header pb-0 bg-primary">
+                    <h5 class="card-title text-white">Estoque</h5>
                 </div>
-                <div class="tab-pane" id="stock">
-                    <div class="card">
-                        <div class="card-body">
-                            <table class="table table-hover table-striped" id="dataTable">
-                                <thead>
-                                <tr>
-                                    <th>Numero</th>
-                                    <th>Data de entrada</th>
-                                    <th>Data de vencimento</th>
-                                    <th>Quantidade</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% for lot in medicine.lot_set.all %}
-                                    <tr>
-                                        <td>{{ lot.number }}</td>
-                                        <td>{{ lot.entry_date|date:'d/m/Y' }}</td>
-                                        <td>{{ lot.shelf_life_date|date:'d/m/Y' }}</td>
-                                        <td>{{ lot.amount }}</td>
-                                    </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                <div class="card-body">
+                    <table class="table table-hover table-striped" id="dataTable">
+                        <thead>
+                        <tr>
+                            <th>Numero</th>
+                            <th>Data de entrada</th>
+                            <th>Data de vencimento</th>
+                            <th>Quantidade</th>
+                            <th>Quantidade Atual</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for lot in medicine.lot_set.all %}
+                            <tr>
+                                <td>{{ lot.number }}</td>
+                                <td>{{ lot.entry_date|date:'d/m/Y' }}</td>
+                                <td>{{ lot.shelf_life_date|date:'d/m/Y' }}</td>
+                                <td>{{ lot.amount }}</td>
+                                <td>{{ lot.current_amount }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
+
 
 
 {% endblock %}
@@ -103,7 +86,8 @@
             $('#dataTable').DataTable({
                 language: {
                     url: '//cdn.datatables.net/plug-ins/1.10.19/i18n/Portuguese-Brasil.json'
-                }
+                },
+                order: [[ 1, "asc" ], [ 2, "asc" ]]
             });
         });
     </script>

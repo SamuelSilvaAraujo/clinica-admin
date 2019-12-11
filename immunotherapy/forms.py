@@ -33,10 +33,18 @@ class BottleForm(forms.ModelForm):
 class ApplicationForm(forms.ModelForm):
     class Meta:
         model = Application
-        fields = ('bottle',  'applicator', 'dosage', 'date', )
+        fields = ('applicator', 'dosage', 'date', )
         widgets = {
-            'bottle': forms.Select(attrs={'class': 'form-control'}),
+            'date': forms.DateInput(attrs={'class': 'form-control'}),
             'applicator': forms.TextInput(attrs={'class': 'form-control'}),
             'dosage': forms.NumberInput(attrs={'class': 'form-control'}),
-            'date': forms.DateInput(attrs={'class': 'form-control'})
+        }
+
+
+class ImmunotherapyFinisheForm(forms.ModelForm):
+    class Meta:
+        model = Immunotherapy
+        fields = ('end_date', )
+        widgets = {
+            'end_date': forms.DateInput(attrs={'class': 'form-control'})
         }

@@ -11,53 +11,56 @@
 {% block header %}
     <h2>
         {{ immunotherapy.patient.name }}&nbsp
-        <button class="btn btn-sm btn-primary" data-remote="{% url 'bottle_create' immunotherapy.id %}"  data-toggle="modal" data-target="#bottleModal"><i class="fa fa-plus"></i>&nbsp  Cadastrar Frasco</button>&nbsp
-        <button class="btn btn-sm btn-primary" data-remote="{% url 'application_create' immunotherapy.id %}"  data-toggle="modal" data-target="#applicationModal"><i class="fa fa-plus"></i>&nbsp  Cadastrar Aplicação</button>
+        {% if immunotherapy.status == immunotherapy.IN_PROGRESS %}
+            {% if not immunotherapy.bottle %}
+                <button class="btn btn-sm btn-primary" data-remote="{% url 'bottle_create' immunotherapy.id %}"  data-toggle="modal" data-target="#bottleModal"><i class="fa fa-plus"></i>&nbsp  Cadastrar Frasco</button>&nbsp
+            {% else %}
+                <button class="btn btn-sm btn-primary" data-remote="{% url 'application_create' immunotherapy.id %}"  data-toggle="modal" data-target="#applicationModal"><i class="fa fa-plus"></i>&nbsp  Cadastrar Aplicação</button>
+            {% endif %}
+            <button type="button" class="btn btn-sm btn-success" data-remote="{% url 'immunotherapy_finishe' immunotherapy.id %}"  data-toggle="modal" data-target="#finisheModal">Finalizar Imunoterapia</button>
+        {% endif %}
     </h2>
 {% endblock %}
 
 {% block content %}
 
     <div class="row mb-4">
-        <div class="col-lg-4">
-            <div class="card">
-                <div class="card-header pb-0 bg-primary">
-                    <h5 class="card-title text-white">Remédio</h5>
-                </div>
-                <div class="card-body pb-0">
-                    <p>{{ immunotherapy.medicine.name }}</p>
-                </div>
-            </div>
+        <div class="col-lg-6">
+            <h5 class="sizes"><b>Remédio:</b>
+                <span class="size" data-toggle="tooltip" title="small">{{ immunotherapy.medicine.name }} - {{ immunotherapy.medicine.volume }} ml</span>
+            </h5>
+            <h5 class="sizes"><b>Data de ínicio:</b>
+                <span class="size" data-toggle="tooltip" title="small">{{ immunotherapy.start_date|date:'d/m/Y' }}</span>
+            </h5>
+            {% if immunotherapy.status == immunotherapy.FINISHED %}
+                <h5 class="sizes"><b>Data de Fim:</b>
+                    <span class="size" data-toggle="tooltip" title="small">{{ immunotherapy.end_date|date:'d/m/Y' }}</span>
+                </h5>
+            {% endif %}
         </div>
-        <div class="col-lg-3">
-            <div class="card">
-                <div class="card-header pb-0 bg-primary">
-                    <h5 class="card-title text-white">Data de ínicio</h5>
-                </div>
-                <div class="card-body pb-0">
-                    <p>{{ immunotherapy.start_date|date:'d/m/Y' }}</p>
-                </div>
-            </div>
+        <div class="col-lg-6">
+            <h5 class="sizes"><b>Aplicações total:</b>
+                <span class="size" data-toggle="tooltip" title="small">{{ immunotherapy.total_applications }}</span>
+            </h5>
+            <h5 class="sizes"><b>Aplicações realizadas:</b>
+                <span class="size" data-toggle="tooltip" title="small">{{ immunotherapy.realized_applications }}</span>
+            </h5>
+            <h5 class="sizes"><b>Status:</b>
+                <span class="badge {% if immunotherapy.status == immunotherapy.IN_PROGRESS %} badge-primary {% else %} badge-success {% endif %}" data-toggle="tooltip" title="small">{{ immunotherapy.get_status_display }}</span>
+            </h5>
         </div>
-        <div class="col-lg-2">
-            <div class="card">
-                <div class="card-header pb-0 bg-primary">
-                    <h5 class="card-title text-white">Aplicações</h5>
-                </div>
-                <div class="card-body pb-0 text-center">
-                    <p>{{ immunotherapy.total_applications }}</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3">
-            <div class="card">
-                <div class="card-header pb-0 bg-primary">
-                    <h5 class="card-title text-white">Aplicações / frasco</h5>
-                </div>
-                <div class="card-body pb-0 text-center">
-                    <p>2</p>
-                </div>
-            </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-lg-12">
+            <h5 class="sizes"><b>Frasco Em Uso:</b>
+                <span class="size" data-toggle="tooltip" title="small"> {{ immunotherapy.bottle.bottle_number|default:'Nenhum frasco cadastrado' }}</span>
+            </h5>
+            {% if immunotherapy.bottle %}
+                <h5 class="sizes"><b>Data da ultima Aplicação:</b>
+                    <span class="size" data-toggle="tooltip" title="small"> {{ immunotherapy.last_application.date|date:'d/m/Y'|default:'Nenhuma aplicação cadastrada' }}</span>
+                </h5>
+            {% endif %}
         </div>
     </div>
 
@@ -78,45 +81,11 @@
                             </tr>
                             </thead>
                             <tbody>
-                            {% for botten in immunotherapy.bottle_set.all %}
-                                {% for application in botten.application_set.all %}
-                                    <tr>
-                                        <td>{{ application.date|date:'d/m/Y' }}</td>
-                                        <td>{{ application.applicator }}</td>
-                                        <td>{{ application.dosage }}</td>
-                                    </tr>
-                                {% endfor %}
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="card mb-4">
-                <div class="card-header pb-0 bg-primary">
-                    <h5 class="card-title text-white">Fracos</h5>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table" id="bottenTable">
-                            <thead>
-                            <tr>
-                                <th>Numero</th>
-                                <th>Lote</th>
-                                <th>Status</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for botten in immunotherapy.bottle_set.all %}
+                            {% for application in immunotherapy.bottle.application_set.all %}
                                 <tr>
-                                    <td>{{ botten.bottle_number }}</td>
-                                    <td>{{ botten.lot }}</td>
-                                    <td>{{ botten.get_status_display }}</td>
+                                    <td>{{ application.date|date:'d/m/Y' }}</td>
+                                    <td>{{ application.applicator }}</td>
+                                    <td>{{ application.dosage }} ml</td>
                                 </tr>
                             {% endfor %}
                             </tbody>
@@ -139,12 +108,21 @@
         </div>
     </div>
 
+    <div class="modal inmodal fade" id="finisheModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content animated bounceInRight"></div>
+        </div>
+    </div>
+
 {% endblock %}
 
 {% block script %}
 
     <script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
     <script src="{% static 'vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+
+    <script src="{% static 'libs/vanilla-text-mask/vanilla-text-mask.js' %}"></script>
+    <script src="{% static 'libs/vanilla-text-mask/text-mask-addons.js' %}"></script>
 
     <script>
         $(document).ready(function() {
@@ -163,7 +141,6 @@
             $('body').on('click', '[data-toggle="modal"]', function(){
                 $($(this).data("target")+' .modal-content').load($(this).data("remote"));
             });
-
         });
     </script>
 

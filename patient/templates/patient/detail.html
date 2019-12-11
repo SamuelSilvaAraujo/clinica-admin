@@ -19,50 +19,37 @@
 {% block content %}
 
     <div class="row my-2">
-        <div class="col-lg-8 order-lg-2">
+        <div class="col-lg-9 order-lg-2">
             <ul class="nav nav-tabs">
                 <li class="nav-item">
                     <a href="#" data-target="#profile" data-toggle="tab" class="nav-link active">Perfil</a>
                 </li>
                 <li class="nav-item">
-                    <a href="#" data-target="#messages" data-toggle="tab" class="nav-link">Tratamentos</a>
+                    <a href="#" data-target="#messages" data-toggle="tab" class="nav-link">Imunoterapias</a>
                 </li>
             </ul>
             <div class="tab-content py-4">
                 <div class="tab-pane active" id="profile">
                     <div class="row">
                         <div class="col-md-12">
-
-                            <h6>
-                                <b>Data de nascimento (idade)</b>
-                            </h6>
-                            <p>
-                                {{ patient.birth_date|date:'d-m-Y' }} ( {{patient.birth_date|age}} anos )
-                            </p>
-                            <h6>
-                                <b>CPF</b>
-                            </h6>
-                            <p>
-                                {{ patient.cpf|default:'Não informado' }}
-                            </p>
-                            <h6>
-                                <b>RG</b>
-                            </h6>
-                            <p>
-                                {{ patient.rg|default:'Não informado' }}
-                            </p>
-                            <h6>
-                                <b>Telefone</b>
-                            </h6>
-                            <p>
-                                {{ patient.phone|default:'Não informado' }}
-                            </p>
-                            <h6>
-                                <b>Endereço</b>
-                            </h6>
-                            <p>
-                                {{ patient.address }}, {{ patient.city }} - {{ patient.state }}
-                            </p>
+                            <h5 class="sizes mb-2"><b>Data de nascimento: </b>
+                                <span class="size" data-toggle="tooltip" title="small"> {{ patient.birth_date|date:'d/m/Y' }}</span>
+                            </h5>
+                            <h5 class="sizes mb-2"><b>Idade: </b>
+                                <span class="size" data-toggle="tooltip" title="small">{{patient.birth_date|age}} anos</span>
+                            </h5>
+                            <h5 class="sizes mb-2"><b>CPF: </b>
+                                <span class="size" data-toggle="tooltip" title="small">{{ patient.cpf|default:'Não informado' }}</span>
+                            </h5>
+                            <h5 class="sizes mb-2"><b>RG: </b>
+                                <span class="size" data-toggle="tooltip" title="small">{{ patient.rg|default:'Não informado' }}</span>
+                            </h5>
+                            <h5 class="sizes mb-2"><b>Telefone: </b>
+                                <span class="size" data-toggle="tooltip" title="small">{{ patient.phone|default:'Não informado' }}</span>
+                            </h5>
+                            <h5 class="sizes mb-2"><b>Endereço: </b>
+                                <span class="size" data-toggle="tooltip" title="small">{{ patient.address }}, {{ patient.city }} - {{ patient.state }}</span>
+                            </h5>
                         </div>
                     </div>
                 </div>
@@ -70,7 +57,25 @@
                     <div class="card">
                         <div class="card-body">
                             <table class="table table-hover table-striped" id="id_table">
+                                <thead>
+                                <tr>
+                                    <th>Remedio</th>
+                                    <th>Data de Inicio</th>
+                                    <th>Data de Fim</th>
+                                    <th>Status</th>
+                                </tr>
+                                </thead>
                                 <tbody>
+                                {% for imunotherapy in  patient.immunotherapy_set.all %}
+                                    <tr>
+                                        <td>
+                                            <a href="{% url 'immunotherapy_detail' imunotherapy.id %}">{{ imunotherapy.medicine.name }}</a>
+                                        </td>
+                                        <td>{{ imunotherapy.start_date|date:'d/m/Y' }}</td>
+                                        <td>{{ imunotherapy.end_date|date:'d/m/Y'|default:'Não informada' }}</td>
+                                        <td>{{ imunotherapy.get_status_display }}</td>
+                                    </tr>
+                                {% endfor %}
                                 </tbody>
                             </table>
                         </div>
@@ -78,7 +83,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-4 order-lg-1 text-center">
+        <div class="col-lg-3 order-lg-1 text-center">
             {% if patient.photo %}
                 <img src="{{ patient.photo.url }}" class="mx-auto img-fluid img-circle d-block" alt="avatar">
             {% else %}

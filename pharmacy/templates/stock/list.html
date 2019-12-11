@@ -36,8 +36,8 @@
                         <tr>
                             <td>{{ lot.number }}</td>
                             <td>{{ lot.medicine.name }}</td>
-                            <td>{{ lot.entry_date|date:'d-m-Y' }}</td>
-                            <td>{{ lot.shelf_life_date|date:'d-m-Y' }}</td>
+                            <td>{{ lot.entry_date|date:'d/m/Y' }}</td>
+                            <td>{{ lot.shelf_life_date|date:'d/m/Y' }}</td>
                             <td>{{ lot.amount }}</td>
                             <td>{{ lot.current_amount }}</td>
                             <td>
@@ -72,7 +72,7 @@
                     url: '//cdn.datatables.net/plug-ins/1.10.19/i18n/Portuguese-Brasil.json'
                 },
                 columnDefs: [ {
-                    "targets": 5,
+                    "targets": 6,
                     "orderable": false
                 }]
             });

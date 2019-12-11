@@ -3,12 +3,12 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
+from django.core.files import File
 
 import re
 import base64
 from io import BytesIO
 from PIL import Image
-from django.core.files import File
 
 from .models import Patient
 from .forms import PatientForm
@@ -69,7 +69,7 @@ class PatientUpdateView(LoginRequiredMixin, UpdateView):
         return context
 
     def get_success_url(self):
-        return reverse('patients')
+        return reverse('patient_detail', kwargs={'pk': self.object.id})
 
 
 class PatientDeleteView(LoginRequiredMixin, DeleteView):

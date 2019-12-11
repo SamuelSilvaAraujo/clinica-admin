@@ -23,6 +23,8 @@
                     <thead>
                     <tr>
                         <th>Remédio</th>
+                        <th>Categoria</th>
+                        <th>Volume</th>
                         <th style="width: 10%"></th>
                     </tr>
                     </thead>
@@ -31,6 +33,12 @@
                         <tr>
                             <td>
                                 <a href="{% url 'medicine_detail' medicine.id %}">{{ medicine.name }}</a>
+                            </td>
+                            <td>
+                                {{ medicine.category.name }}
+                            </td>
+                            <td>
+                                {{ medicine.volume }} ml
                             </td>
                             <td>
                                 <form method="post" action="{% url 'medicine_delete' medicine.id %}" class="p-0 m-0">
@@ -64,7 +72,7 @@
                     url: '//cdn.datatables.net/plug-ins/1.10.19/i18n/Portuguese-Brasil.json'
                 },
                 columnDefs: [ {
-                    "targets": 1,
+                    "targets": 3,
                     "orderable": false
                 }]
             });

@@ -29,7 +29,7 @@ class Medicine(models.Model):
 
 class LotQuerySet(models.QuerySet):
     def all_in_stock_queryset(self):
-        return self.annotate(in_stock=F('amount') - Count('bottle')).filter(in_stock__gt=0)
+        return self.annotate(current_amount=F('amount') - Count('bottle')).filter(current_amount__gt=0)
 
 
 class LotManager(models.Manager):
@@ -52,9 +52,8 @@ class Lot(models.Model):
     class Meta:
         ordering = ['entry_date', 'shelf_life_date']
 
-    def __str__(self):
-        return "{} ({})".format(self.number, self.current_amount())
-
     def current_amount(self):
-        all_bottle = self.bottle_set.all()
-        return self.amount - all_bottle.count()
+        return self.amount - self.bottle_set.count()
+
+    def __str__(self):
+        return "{}".format(self.number)
