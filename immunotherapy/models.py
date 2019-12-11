@@ -19,7 +19,7 @@ class Application(models.Model):
     dosage = models.FloatField('Dosagem')
 
     class Meta:
-        ordering = ['date', ]
+        ordering = ('-date',)
 
 
 class Immunotherapy(models.Model):
@@ -40,7 +40,7 @@ class Immunotherapy(models.Model):
     bottle = models.OneToOneField(Bottle, on_delete=models.SET_NULL, null=True, blank=True)
 
     class Meta:
-        ordering = ('status', )
+        ordering = ('status', 'start_date', )
 
     def __str__(self):
         return "{} - {}".format(self.patient.name, self.medicine.name)
