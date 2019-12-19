@@ -22,6 +22,8 @@ def get_appointments_ajax(request):
 
     for ap in appointments:
         ap['bgcolor'] = Appointment.STATUS_COLORS[ap['status']]
+        ap['start'] = ap['start'].astimezone()
+        ap['end'] = ap['end'].astimezone()
 
     return JsonResponse(list(appointments), safe=False)
 

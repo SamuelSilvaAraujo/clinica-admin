@@ -84,6 +84,9 @@
     <script src="{% static 'libs/vanilla-text-mask/vanilla-text-mask.js' %}"></script>
     <script src="{% static 'libs/vanilla-text-mask/text-mask-addons.js' %}"></script>
 
+    <script src="{% static 'libs/select2-4.0.12/dist/js/select2.min.js' %}"></script>
+    <script src="{% static 'libs/select2-4.0.12/dist/js/i18n/pt-BR.js' %}"></script>
+
     <script>
         $(function () {
             vanillaTextMask.maskInput({
@@ -97,6 +100,12 @@
                 guide: false
             });
         });
+
+        $('#{{ form.medicine.id_for_label }}').select2({
+            locale: 'pt-BR',
+            placeholder: "Escolha o Remédio.",
+        });
+
     </script>
 
 {% endblock %}

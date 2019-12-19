@@ -37,5 +37,4 @@ urlpatterns = [
     path('doenca/criar/', IllnessCreateView.as_view(), name='illness_create'),
     path('doenca/editar/<int:pk>/', IllnessUpdateView.as_view(), name='illness_update'),
     path('doenca/excluir/<int:pk>/', IllnessDeleteView.as_view(), name='illness_delete'),
-
 ]
