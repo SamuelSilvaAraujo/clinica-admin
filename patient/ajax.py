@@ -12,7 +12,7 @@ from .models import Patient
 def get_patients_ajax(request):
     if request.is_ajax():
         q = request.GET.get('term', '')
-        patients = Patient.objects.filter(name__contains=q) \
+        patients = Patient.objects.filter(name__icontains=q) \
             .values('id', 'name', )\
             .annotate(label=F('name'))
         patients = list(patients)

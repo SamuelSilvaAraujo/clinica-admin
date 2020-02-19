@@ -4,6 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from datetime import datetime
 
+from patient.models import Patient
 from .models import Immunotherapy, Bottle, Application
 from .forms import ImmunotherapyForm, BottleForm, ApplicationForm, ImmunotherapyFinisheForm
 
@@ -23,9 +24,18 @@ class ImmunotherapyCreateView(LoginRequiredMixin, CreateView):
     template_name = 'immunotherapy/form.html'
     form_class = ImmunotherapyForm
 
+    def get_parameters(self):
+        return {
+            'patient': self.request.GET.get('patient'),
+        }
+
     def get_context_data(self, **kwargs):
         context = super(ImmunotherapyCreateView, self).get_context_data(**kwargs)
         context["immunotherapyPage"] = "active"
+        patient_id = self.get_parameters()['patient']
+        if patient_id:
+            patient = Patient.objects.get(id=patient_id)
+            context["patient"] = patient
         return context
 
     def get_initial(self):

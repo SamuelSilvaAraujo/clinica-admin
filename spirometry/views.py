@@ -2,6 +2,7 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView, D
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
 
+from patient.models import Patient
 from .models import Material, Stock, Spirometry
 from .forms import MaterialForm, MaterialStockForm, SpirometryForm
 
@@ -119,10 +120,19 @@ class SpirometryCreateView(LoginRequiredMixin, CreateView):
     model = Spirometry
     form_class = SpirometryForm
 
+    def get_parameters(self):
+        return {
+            'patient': self.request.GET.get('patient'),
+        }
+
     def get_context_data(self, **kwargs):
         context = super(SpirometryCreateView, self).get_context_data(**kwargs)
         context["spirometryPage"] = "active"
         context["spirometryMenu"] = "active"
+        patient_id = self.get_parameters()['patient']
+        if patient_id:
+            patient = Patient.objects.get(id=patient_id)
+            context["patient"] = patient
         return context
 
     def get_success_url(self):

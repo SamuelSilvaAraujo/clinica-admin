@@ -33,7 +33,8 @@ class PatientCreateView(LoginRequiredMixin, CreateView):
         return {
             'patient': self.request.GET.get('patient_name'),
             'start': self.request.GET.get('start'),
-            'end': self.request.GET.get('end')
+            'end': self.request.GET.get('end'),
+            'next': self.request.GET.get('next')
         }
 
     def get_context_data(self, **kwargs):
@@ -53,8 +54,11 @@ class PatientCreateView(LoginRequiredMixin, CreateView):
         patient_name = self.get_parameters()['patient']
         start = self.get_parameters()['start']
         end = self.get_parameters()['end']
-        if patient_name:
-            return '{}?patient={}&start={}&end={}'.format(reverse('appointment_create'), self.object.id, start, end)
+        next = self.get_parameters()['next']
+        if patient_name and start and end:
+            return '{}?patient={}&start={}&end={}'.format(next, self.object.id, start, end)
+        elif patient_name:
+            return '{}?patient={}'.format(next, self.object.id)
         return reverse('patient_detail', kwargs={'pk': self.object.id})
 
 

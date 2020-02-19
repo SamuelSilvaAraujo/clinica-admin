@@ -85,7 +85,7 @@
             var $id_patient = $('#{{ form.patient.id_for_label }}');
 
             $id_patient.select2({
-                locale: 'pt-BR',
+                language: 'pt-BR',
                 placeholder: "Digite o nome para encontrar o Paciente.",
                 allowClear: true,
                 minimumInputLength: 3,
@@ -107,10 +107,12 @@
                 },
             });
 
+            $.fn.select2.defaults.set('locale', 'pt-BR');
+
             $id_patient.on('select2:select', function (e) {
                 var data = e.params.data;
                 if (data.id === 'NEW_PATIENT') {
-                    window.location = `{% url 'patient_create' %}?patient_name=${data.name}&start={{ start }}&end={{ end }}`;
+                    window.location = `{% url 'patient_create' %}?next={% url 'appointment_create' %}&patient_name=${data.name}&start={{ start }}&end={{ end }}`;
                 }
             });
 
