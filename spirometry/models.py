@@ -21,7 +21,12 @@ class Material(models.Model):
         return self.name
 
     def amount_in_stock(self):
-        return self.stock_set.aggregate(total=Sum('amount')).get('total') - Spirometry.objects.count() or 0
+        total = self.stock_set.aggregate(total=Sum('amount')).get('total') or 0
+        spirometry_count = Spirometry.objects.count()
+        if spirometry_count > total:
+            return 0
+        else:
+            return total - spirometry_count
 
 
 class Stock(models.Model):
