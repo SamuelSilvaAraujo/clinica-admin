@@ -6,6 +6,18 @@
 
     <link href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
 
+    <style>
+        td.details-control {
+            background: url({% static 'img/add-icon.png' %}) no-repeat center center;
+            background-size: 30px, 30px;
+            cursor: pointer;
+        }
+        tr.shown td.details-control {
+            background: url({% static 'img/close-icon.png' %}) no-repeat center center;
+            background-size: 30px, 30px;
+        }
+    </style>
+
 {% endblock %}
 
 {% block header %}
@@ -24,6 +36,7 @@
                         <table class="table" id="dataTable">
                             <thead>
                             <tr>
+                                <th></th>
                                 <th>Paciente</th>
                                 <th>Data</th>
                                 <th style="width: 10%"></th>
@@ -32,6 +45,7 @@
                             <tbody>
                             {% for spirometry in object_list %}
                                 <tr>
+                                    <td></td>
                                     <td>
                                         {{ spirometry.patient.name }}
                                     </td>
@@ -67,11 +81,57 @@
 
     <script>
         $(document).ready(function() {
-            $('#dataTable').DataTable({
+
+            function format () {
+                return "<ul>" +
+                    {% for material in materiais %}
+                        "<li>{{ material.name }}</li>" +
+                    {% endfor %}
+                    "</ul>"
+            }
+
+
+            var $table = $('#dataTable').DataTable({
                 language: {
                     url: '//cdn.datatables.net/plug-ins/1.10.19/i18n/Portuguese-Brasil.json'
-                }
+                },
+                columnDefs: [
+                    {
+                        "orderable": false,
+                        "targets":   0
+                    },
+                    {
+                        "orderable": false,
+                        "targets":   2
+                    }
+                ],
+                "columns": [
+                    {
+                        "className":      'details-control',
+                        "orderable":      false,
+                        "data":           null,
+                        "defaultContent": ''
+                    },
+                    { "data": "patient" },
+                    { "data": "date" },
+                    {  },
+                ],
             });
+
+
+            $('#dataTable tbody').on('click', 'td.details-control', function () {
+                var tr = $(this).closest('tr');
+                var row = $table.row( tr );
+
+                if ( row.child.isShown() ) {
+                    row.child.hide();
+                    tr.removeClass('shown');
+                }
+                else {
+                    row.child( format() ).show();
+                    tr.addClass('shown');
+                }
+            } );
         });
     </script>
 

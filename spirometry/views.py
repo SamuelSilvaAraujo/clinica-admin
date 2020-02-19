@@ -110,6 +110,7 @@ class SpirometryListView(LoginRequiredMixin, ListView):
         context = super(SpirometryListView, self).get_context_data(**kwargs)
         context["spirometryPage"] = "active"
         context["spirometryMenu"] = "active"
+        context["materiais"] = Material.objects.all()
         return context
 
 
