@@ -47,16 +47,16 @@
                 <span>Pacientes</span></a>
         </li>
 
-        <li class="nav-item {{ pharmacyPage }}">
-            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+        <li class="nav-item {{ pharmacyMenu }}">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#pharmacyMenu" aria-expanded="true" aria-controls="collapseTwo">
                 <i class="fas fa-fw fa-prescription-bottle-alt"></i>
                 <span>Farmácia</span>
             </a>
-            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div id="pharmacyMenu" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
-                    <a class="collapse-item" href="{% url 'categories' %}">Categorias</a>
-                    <a class="collapse-item" href="{% url 'medicines' %}">Remédios</a>
-                    <a class="collapse-item" href="{% url 'stock' %}">Estoque</a>
+                    <a class="collapse-item {{ categoryPage }}" href="{% url 'categories' %}">Categorias</a>
+                    <a class="collapse-item {{ medicinePage }}" href="{% url 'medicines' %}">Remédios</a>
+                    <a class="collapse-item {{ stockPage }}" href="{% url 'stock' %}">Estoque</a>
                 </div>
             </div>
         </li>
@@ -71,6 +71,20 @@
             <a class="nav-link" href="{% url 'immunotherapy' %}">
                 <i class="fas fa-fw fa-laptop-medical"></i>
                 <span>Imunoterapia</span></a>
+        </li>
+
+        <li class="nav-item {{ spirometryMenu }}">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#spirometryMenu" aria-expanded="true" aria-controls="collapseTwo">
+                <i class="fas fa-fw fa-diagnoses"></i>
+                <span>Espirometria</span>
+            </a>
+            <div id="spirometryMenu" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <a class="collapse-item {{ spirometryPage }}" href="{% url 'spirometry_list' %}">Espirometria</a>
+                    <a class="collapse-item {{ materialPage }}" href="{% url 'material_list' %}">Materiais</a>
+                    <a class="collapse-item {{ stockPage }}" href="{% url 'material_stock_list' %}">Estoque</a>
+                </div>
+            </div>
         </li>
 
     </ul>

@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models import Q, Count, F
+from django.db.models import Count, F
 
 
 class Illness(models.Model):

@@ -12,7 +12,8 @@ class MedicineCategoryListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super(MedicineCategoryListView, self).get_context_data(**kwargs)
-        context["pharmacyPage"] = "active"
+        context["pharmacyMenu"] = "active"
+        context["categoryPage"] = "active"
         return context
 
 
@@ -23,7 +24,8 @@ class MedicineCategoryCreateView(LoginRequiredMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super(MedicineCategoryCreateView, self).get_context_data(**kwargs)
-        context["pharmacyPage"] = "active"
+        context["pharmacyMenu"] = "active"
+        context["categoryPage"] = "active"
         return context
 
     def get_success_url(self):
@@ -37,7 +39,8 @@ class MedicineCategoryUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(MedicineCategoryUpdateView, self).get_context_data(**kwargs)
-        context["pharmacyPage"] = "active"
+        context["pharmacyMenu"] = "active"
+        context["categoryPage"] = "active"
         return context
 
     def get_success_url(self):
@@ -102,7 +105,8 @@ class StockListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super(StockListView, self).get_context_data(**kwargs)
-        context["pharmacyPage"] = "active"
+        context["pharmacyMenu"] = "active"
+        context["stockPage"] = "active"
         return context
 
 
@@ -113,7 +117,8 @@ class StockLotCreateView(LoginRequiredMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super(StockLotCreateView, self).get_context_data(**kwargs)
-        context["pharmacyPage"] = "active"
+        context["pharmacyMenu"] = "active"
+        context["stockPage"] = "active"
         return context
 
     def get_success_url(self):
@@ -127,7 +132,8 @@ class StockLotUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(StockLotUpdateView, self).get_context_data(**kwargs)
-        context["pharmacyPage"] = "active"
+        context["pharmacyMenu"] = "active"
+        context["stockPage"] = "active"
         return context
 
     def get_initial(self):
@@ -155,7 +161,8 @@ class MedicineListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super(MedicineListView, self).get_context_data(**kwargs)
-        context["pharmacyPage"] = "active"
+        context["pharmacyMenu"] = "active"
+        context["medicinePage"] = "active"
         return context
 
 
@@ -166,7 +173,8 @@ class MedicineCreateView(LoginRequiredMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super(MedicineCreateView, self).get_context_data(**kwargs)
-        context["pharmacyPage"] = "active"
+        context["pharmacyMenu"] = "active"
+        context["medicinePage"] = "active"
         return context
 
     def get_success_url(self):
@@ -180,7 +188,8 @@ class MedicineUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(MedicineUpdateView, self).get_context_data(**kwargs)
-        context["pharmacyPage"] = "active"
+        context["pharmacyMenu"] = "active"
+        context["medicinePage"] = "active"
         return context
 
     def get_success_url(self):
@@ -200,5 +209,6 @@ class MedicineDetailView(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(MedicineDetailView, self).get_context_data(**kwargs)
-        context["pharmacyPage"] = "active"
+        context["pharmacyMenu"] = "active"
+        context["medicinePage"] = "active"
         return context
