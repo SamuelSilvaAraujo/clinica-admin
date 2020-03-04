@@ -1,5 +1,9 @@
+from datetime import datetime
+
 from django.db import models
 from django.db.models import Count, F
+
+from patient.models import Patient
 
 
 class Illness(models.Model):
@@ -22,6 +26,7 @@ class Medicine(models.Model):
     illness = models.ManyToManyField(Illness, verbose_name='Doenças', blank=True)
     composition = models.TextField('Composição')
     volume = models.FloatField('Volume')
+    supplier = models.CharField('Fornecedor', max_length=200)
 
     def __str__(self):
         return self.name
@@ -29,7 +34,7 @@ class Medicine(models.Model):
 
 class LotQuerySet(models.QuerySet):
     def all_in_stock_queryset(self):
-        return self.annotate(current_amount=F('amount') - Count('bottle')).filter(current_amount__gt=0)
+        return self.annotate(current_amount=F('amount') - (Count('bottle') + Count('medicine__freesample'))).filter(current_amount__gt=0)
 
 
 class LotManager(models.Manager):
@@ -53,7 +58,16 @@ class Lot(models.Model):
         ordering = ['entry_date', 'shelf_life_date']
 
     def current_amount(self):
-        return self.amount - self.bottle_set.count()
+        return self.amount - (self.bottle_set.count() + self.medicine.freesample_set.count())
 
     def __str__(self):
         return "{}".format(self.number)
+
+
+class FreeSample(models.Model):
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, verbose_name='Paciente')
+    medicine = models.ForeignKey(Medicine, on_delete=models.CASCADE, verbose_name='Medicamento')
+    date = models.DateField('Data', default=datetime.today())
+
+    def __str__(self):
+        return "{} - {}".format(self.medicine.name, self.patient.name)

@@ -23,12 +23,16 @@
             </h5>
 
             <h5 class="sizes mb-2"><b>Composição: </b>
-                <span class="" data-toggle="tooltip" title="small"> {{ medicine.composition|default:'Não informado' }}</span> <br>
+                {{ medicine.composition|default:'Não informado' }}
             </h5>
         </div>
         <div class="col-lg-6">
             <h5 class="sizes mb-2"><b>Volume: </b>
                 <span class="" data-toggle="tooltip" title="small"> {{ medicine.volume|default:'Não informado' }} ml</span> <br>
+            </h5>
+
+            <h5 class="sizes mb-2"><b>Fornecedor: </b>
+                <span class="" data-toggle="tooltip" title="small"> {{ medicine.supplier|default:'Não informado' }}</span> <br>
             </h5>
 
             <h5><b>Doenças tratáveis: </b><br>

@@ -10,8 +10,8 @@
 
 {% block header %}
     <h2>
-        Medicamentos &nbsp
-        <a href="{% url 'medicine_create' %}" class="btn btn-sm btn-primary"><i class="fa fa-plus"></i>&nbsp  Cadastrar Medicamento</a>
+        Amostras Grátis &nbsp
+        <a href="{% url 'freesample_create' %}" class="btn btn-sm btn-primary"><i class="fa fa-plus"></i>&nbsp  Cadastrar Amostra Grátis</a>
     </h2>
 {% endblock %}
 
@@ -23,31 +23,27 @@
                     <thead>
                     <tr>
                         <th>Medicamento</th>
-                        <th>Categoria</th>
-                        <th>Volume</th>
-                        <th>Fornecedor</th>
+                        <th>Paciente</th>
+                        <th>Data</th>
                         <th style="width: 10%"></th>
                     </tr>
                     </thead>
                     <tbody>
-                    {% for medicine in object_list %}
+                    {% for free_sample in object_list %}
                         <tr>
                             <td>
-                                <a href="{% url 'medicine_detail' medicine.id %}">{{ medicine.name }}</a>
+                                {{ free_sample.medicine.name }}
                             </td>
                             <td>
-                                {{ medicine.category.name }}
+                                {{ free_sample.patient.name }}
                             </td>
                             <td>
-                                {{ medicine.volume }} ml
+                                {{ free_sample.date|date:'d/m/Y' }}
                             </td>
                             <td>
-                                {{ medicine.supplier }}
-                            </td>
-                            <td>
-                                <form method="post" action="{% url 'medicine_delete' medicine.id %}" class="p-0 m-0">
+                                <form method="post" action="{% url 'freesample_delete' free_sample.id %}" class="p-0 m-0">
                                     {% csrf_token %}
-                                    <a href="{% url 'medicine_update' medicine.id %}" class="btn btn-write btn-sm">
+                                    <a href="{% url 'freesample_update' free_sample.id  %}" class="btn btn-write btn-sm">
                                         <i class="fa fa-fw fa-edit"></i>
                                     </a>
                                     <button type="submit" class="btn btn-write btn-sm" onclick="return confirm('Você tem certeza que deseja remover?');">
@@ -62,6 +58,7 @@
             </div>
         </div>
     </div>
+
 {% endblock %}
 
 {% block script %}
@@ -76,7 +73,7 @@
                     url: '//cdn.datatables.net/plug-ins/1.10.19/i18n/Portuguese-Brasil.json'
                 },
                 columnDefs: [ {
-                    "targets": 4,
+                    "targets": 3,
                     "orderable": false
                 }]
             });

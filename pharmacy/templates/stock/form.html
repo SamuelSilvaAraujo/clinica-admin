@@ -91,12 +91,12 @@
         $(function () {
             vanillaTextMask.maskInput({
                 inputElement: $('#{{form.entry_date.id_for_label}}')[0],
-                mask: [/[0-3]/, /\d/, '-', /[0-1]/, /\d/, '-', /[1-2]/, /\d/, /\d/, /\d/],
+                mask: [/[0-3]/, /\d/, '/', /[0-1]/, /\d/, '/', /[1-2]/, /\d/, /\d/, /\d/],
                 guide: false
             });
             vanillaTextMask.maskInput({
                 inputElement: $('#{{form.shelf_life_date.id_for_label}}')[0],
-                mask: [/[0-3]/, /\d/, '-', /[0-1]/, /\d/, '-', /[1-2]/, /\d/, /\d/, /\d/],
+                mask: [/[0-3]/, /\d/, '/', /[0-1]/, /\d/, '/', /[1-2]/, /\d/, /\d/, /\d/],
                 guide: false
             });
         });

@@ -2,8 +2,10 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView, D
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
 
-from .models import Medicine, MedicineCategory, Lot, Illness
-from .forms import MedicineCategoryForm, IllnessForm, MedicineForm, LotForm
+from patient.models import Patient
+
+from .models import Medicine, MedicineCategory, Lot, Illness, FreeSample
+from .forms import MedicineCategoryForm, IllnessForm, MedicineForm, LotForm, FreeSampleForm
 
 
 class MedicineCategoryListView(LoginRequiredMixin, ListView):
@@ -171,13 +173,30 @@ class MedicineCreateView(LoginRequiredMixin, CreateView):
     model = Medicine
     form_class = MedicineForm
 
+    def get_parameters(self):
+        return {
+            'medicine_name': self.request.GET.get('medicine_name'),
+            'next': self.request.GET.get('next')
+        }
+
     def get_context_data(self, **kwargs):
         context = super(MedicineCreateView, self).get_context_data(**kwargs)
         context["pharmacyMenu"] = "active"
         context["medicinePage"] = "active"
         return context
 
+    def get_initial(self):
+        initial = super(MedicineCreateView, self).get_initial()
+        initial = initial.copy()
+        medicine_name = self.get_parameters()['medicine_name']
+        if medicine_name:
+            initial['name'] = medicine_name
+        return initial
+
     def get_success_url(self):
+        next = self.get_parameters()['next']
+        if next:
+            return "{}?medicine={}".format(next, self.object.id)
         return reverse('medicines')
 
 
@@ -212,3 +231,65 @@ class MedicineDetailView(LoginRequiredMixin, DetailView):
         context["pharmacyMenu"] = "active"
         context["medicinePage"] = "active"
         return context
+
+
+class FreeSampleListView(LoginRequiredMixin, ListView):
+    model = FreeSample
+    template_name = 'free_sample/list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(FreeSampleListView, self).get_context_data(**kwargs)
+        context["pharmacyMenu"] = "active"
+        context["freeSamplePage"] = "active"
+        return context
+
+
+class FreeSampleCreateView(LoginRequiredMixin, CreateView):
+    model = FreeSample
+    form_class = FreeSampleForm
+    template_name = 'free_sample/form.html'
+
+    def get_parameters(self):
+        return {
+            'patient': self.request.GET.get('patient'),
+            'medicine': self.request.GET.get('medicine')
+        }
+
+    def get_context_data(self, **kwargs):
+        context = super(FreeSampleCreateView, self).get_context_data(**kwargs)
+        context["pharmacyMenu"] = "active"
+        context["freeSamplePage"] = "active"
+        patient_id = self.get_parameters()['patient']
+        if patient_id:
+            patient = Patient.objects.get(id=patient_id)
+            context["patient"] = patient
+        medicine_id = self.get_parameters()['medicine']
+        if medicine_id:
+            medicine = Medicine.objects.get(id=medicine_id)
+            context['medicine'] = medicine
+        return context
+
+    def get_success_url(self):
+        return reverse('freesample_list')
+
+
+class FreeSampleUpdateView(LoginRequiredMixin, UpdateView):
+    model = FreeSample
+    form_class = FreeSampleForm
+    template_name = 'free_sample/form.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(FreeSampleUpdateView, self).get_context_data(**kwargs)
+        context["pharmacyMenu"] = "active"
+        context["freeSamplePage"] = "active"
+        return context
+
+    def get_success_url(self):
+        return reverse('freesample_list')
+
+
+class FreeSampleDeleteView(LoginRequiredMixin, DeleteView):
+    model = FreeSample
+
+    def get_success_url(self):
+        return reverse('freesample_list')

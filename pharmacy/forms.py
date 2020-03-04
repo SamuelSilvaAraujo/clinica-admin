@@ -24,13 +24,14 @@ class IllnessForm(forms.ModelForm):
 class MedicineForm(forms.ModelForm):
     class Meta:
         model = Medicine
-        fields = ('name', 'category', 'illness', 'composition', 'volume', )
+        fields = ('name', 'category', 'illness', 'composition', 'volume', 'supplier', )
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),
             'category': forms.Select(attrs={'class':  'form-control'}),
             'illness': forms.SelectMultiple(attrs={'class': ''}),
             'composition': forms.Textarea(attrs={'class': 'form-control'}),
-            'volume': forms.NumberInput(attrs={'class': 'form-control'})
+            'volume': forms.NumberInput(attrs={'class': 'form-control'}),
+            'supplier': forms.TextInput(attrs={'class': 'form-control'})
         }
 
 
@@ -48,4 +49,15 @@ class LotForm(forms.ModelForm):
             'medicine': forms.Select(attrs={'class': 'form-control'}),
             'amount': forms.NumberInput(attrs={'class': 'form-control'}),
             'number': forms.TextInput(attrs={'class': 'form-control', 'type': 'number'}),
+        }
+
+
+class FreeSampleForm(forms.ModelForm):
+    class Meta:
+        model = FreeSample
+        fields = '__all__'
+        widgets = {
+            'medicine': forms.Select(attrs={'class': 'form-control'}),
+            'patient': forms.Select(attrs={'class': 'form-control'}),
+            'date': forms.DateInput(attrs={'class': 'form-control', 'placeholder': '__/__/____'})
         }

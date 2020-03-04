@@ -5,19 +5,19 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.contrib.auth.decorators import login_required
 from django.db.models import F
 
-from .models import Patient
+from .models import Medicine
 
 
 @login_required()
-def get_patients_ajax(request):
+def get_medicines_ajax(request):
     if request.is_ajax():
         q = request.GET.get('term', '')
-        patients = Patient.objects.filter(name__icontains=q) \
+        medicines = Medicine.objects.filter(name__icontains=q) \
             .values('id', 'name', )\
             .annotate(label=F('name'))
-        patients = list(patients)
-        patients.append({'id': 'NEW_PATIENT', 'label': 'CADASTRAR PACIENTE', 'name': q})
-        data = json.dumps(patients, cls=DjangoJSONEncoder)
+        medicines = list(medicines)
+        medicines.append({'id': 'NEW_MEDICINE', 'label': 'CADASTRAR MEDICAMENTO', 'name': q})
+        data = json.dumps(medicines, cls=DjangoJSONEncoder)
     else:
         data = 'fail'
     return HttpResponse(data, 'application/json')

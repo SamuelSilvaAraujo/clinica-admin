@@ -1,10 +1,11 @@
 from django.urls import path, include
 
 from .views import *
+from .ajax import *
 
 urlpatterns = [
-    path('remedios/', MedicineListView.as_view(), name='medicines'),
-    path('remedio/', include([
+    path('medicamentos/', MedicineListView.as_view(), name='medicines'),
+    path('medicamento/', include([
         path('criar/', MedicineCreateView.as_view(), name='medicine_create'),
         path('<int:pk>/', include([
             path('', MedicineDetailView.as_view(), name='medicine_detail'),
@@ -30,6 +31,17 @@ urlpatterns = [
                     path('excluir/', StockLotDeleteView.as_view(), name='lot_delete'),
                 ])),
             ])),
+        ])),
+    ])),
+
+    path('ajax/medicamentos/', get_medicines_ajax, name='medicines_ajax'),
+
+    path('amostras_gratis/', FreeSampleListView.as_view(), name='freesample_list'),
+    path('amostra_gratis/', include([
+        path('cadastar/', FreeSampleCreateView.as_view(), name='freesample_create'),
+        path('<int:pk>/', include([
+            path('atualizar/', FreeSampleUpdateView.as_view(), name='freesample_update'),
+            path('excluir/', FreeSampleDeleteView.as_view(), name='freesample_delete'),
         ])),
     ])),
 
