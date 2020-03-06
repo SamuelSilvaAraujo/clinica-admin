@@ -14,6 +14,7 @@ urlpatterns = [
     path('farmacia/', include('pharmacy.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
     path('espirometria/', include('spirometry.urls')),
+    path('relatorio/', include('resport.urls'))
 ]
 
 urlpatterns += staticfiles_urlpatterns()

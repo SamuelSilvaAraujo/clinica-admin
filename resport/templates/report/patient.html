@@ -1,0 +1,181 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" href={% static "libs/daterangepicker-master/daterangepicker.css" %}>
+    <link href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
+    <link href="{% static 'vendor/datatables/buttons.dataTables.min.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block header %}
+    <h2>
+        Relatório de pacientes
+    </h2>
+{% endblock %}
+
+{% block content %}
+
+    <div class="card mb-4">
+        <div class="card-body p-0">
+            <div class="ui-bordered px-4 pt-4 mb-4">
+                <div class="row align-items-center">
+                    <div class="col-md-6 mb-4">
+                        <label for="id_date_range" class="form-label">Data</label>
+                        <input type="text" id="id_date_range" name="date_range" class="form-control" placeholder="__/__/____">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table" id="dataTable">
+                    <thead>
+                    <tr>
+                        <th>Paciente</th>
+                        <th>Data de início</th>
+                        <th>Data de Fim</th>
+                        <th>Doença</th>
+                        <th>Medicamento</th>
+                        <th>Frasco</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block script %}
+
+    <script src={% static "libs/moment/moment.js" %}></script>
+    <script src={% static "libs/daterangepicker-master/daterangepicker.js" %}></script>
+
+    <script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'vendor/datatables/dataTables.buttons.min.js' %}"></script>
+    <script src="{% static 'vendor/datatables/buttons.print.min.js' %}"></script>
+
+    <script src={% static "vendor/jquery-mask-plugin/jquery.mask.min.js" %}></script>
+
+    <script>
+
+        $(document).ready(function () {
+            var start = moment().subtract(6, 'days');
+            var end = moment();
+
+            var $date_range = $('#id_date_range');
+
+            $date_range.daterangepicker({
+                startDate: start,
+                endDate: end,
+                opens: 'left',
+                ranges: {
+                    'Semana Atual': [moment().subtract(6, 'days'), moment()],
+                    'Semana Passada': [moment().subtract(1, 'weeks').startOf('isoWeek'), moment().subtract(1, 'weeks').endOf('isoWeek')],
+                    'Últimos 30 dias': [moment().subtract(29, 'days'), moment()],
+                    'Este mês': [moment().startOf('month'), moment().endOf('month')],
+                    'Mês passado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+                    'Ano Atual': [moment().startOf('year'), moment()],
+                    'Ano Passado': [moment().subtract(1, 'year').startOf('year'), moment().subtract(1, 'year').endOf('year')],
+                },
+                locale: {
+                    format: 'DD/MM/YYYY',
+                    customRangeLabel: "Definir Período",
+                    applyLabel: "Confirmar",
+                    cancelLabel: "Cancelar",
+                    fromLabel: "De",
+                    toLabel: "Para",
+                    daysOfWeek: [
+                        "DOM",
+                        "SEG",
+                        "TER",
+                        "QUA",
+                        "QUI",
+                        "SEX",
+                        "SAB"
+                    ],
+                    monthNames: [
+                        "Janeiro",
+                        "Feverreiro",
+                        "Março",
+                        "Abril",
+                        "Maio",
+                        "Junho",
+                        "Julho",
+                        "Agosto",
+                        "Setembro",
+                        "Outubro",
+                        "Novembro",
+                        "Dezembro"
+                    ]
+                }
+            });
+
+            $date_range.mask("00/00/0000 - 00/00/0000");
+
+            var table = $('#dataTable').DataTable({
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.10.19/i18n/Portuguese-Brasil.json'
+                },
+                dom: 'Bfrtip',
+                buttons: [
+                    { extend: 'print', text: 'Imprimir' }
+                ],
+                columns: [
+                    {'data': 'patient__name'},
+                    {'data': 'start_date',
+                        render: function(data, type, row){
+                            if(type === "sort" || type === "type"){
+                                return data;
+                            }
+                            return moment(data).format("DD/MM/YYYY");
+                        }
+                    },
+                    {'data': 'end_date',
+                        render: function(data, type, row){
+                            if(type === "sort" || type === "type"){
+                                return data;
+                            }
+                            return moment(data).format("DD/MM/YYYY");
+                        }
+                    },
+                    {'data': 'illness__name'},
+                    {'data': 'medicine__name'},
+                    {'data': 'bottle__bottle_number'}
+                ],
+                ajax: {
+                    "url": "{% url 'report_patients_ajax' %}",
+                    "contentType": "application/json",
+                    "type": "GET",
+                    "data": function (d) {
+                        var customParams = get_form_values();
+                        return jQuery.isEmptyObject(customParams) ? d : customParams;
+                    },
+                    dataSrc: function (json) {
+                        return json.aaData
+                    }
+                }
+            });
+
+            function get_form_values() {
+                return {
+                    'date_range': $date_range.val(),
+                };
+            }
+
+            $date_range.change(function () {
+                table.ajax.reload();
+            });
+        });
+
+    </script>
+
+{% endblock %}

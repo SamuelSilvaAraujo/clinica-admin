@@ -65,13 +65,15 @@
         <li class="nav-item {{ illnessPage }}">
             <a class="nav-link" href="{% url 'illnesses' %}">
                 <i class="fas fa-fw fa-diagnoses"></i>
-                <span>Doenças</span></a>
+                <span>Doenças</span>
+            </a>
         </li>
 
         <li class="nav-item {{ immunotherapyPage }}">
             <a class="nav-link" href="{% url 'immunotherapy' %}">
                 <i class="fas fa-fw fa-laptop-medical"></i>
-                <span>Imunoterapia</span></a>
+                <span>Imunoterapia</span>
+            </a>
         </li>
 
         <li class="nav-item {{ spirometryMenu }}">
@@ -86,6 +88,13 @@
                     <a class="collapse-item {{ stockPage }}" href="{% url 'material_stock_list' %}">Estoque</a>
                 </div>
             </div>
+        </li>
+
+        <li class="nav-item {{ reportMenu }}">
+            <a class="nav-link" href="{% url 'reports' %}">
+                <i class="fas fa-fw fa-file"></i>
+                <span>Relatorios</span>
+            </a>
         </li>
 
     </ul>

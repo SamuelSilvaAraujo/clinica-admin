@@ -37,6 +37,9 @@
                     <span class="size" data-toggle="tooltip" title="small">{{ immunotherapy.end_date|date:'d/m/Y' }}</span>
                 </h5>
             {% endif %}
+            <h5 class="sizes"><b>Doença: </b>
+                <span class="size" data-toggle="tooltip" title="small">{{ immunotherapy.illness.name }}</span>
+            </h5>
         </div>
         <div class="col-lg-6">
             <h5 class="sizes"><b>Aplicações total:</b>

@@ -1,7 +1,7 @@
 from django.db import models
 
 from patient.models import Patient
-from pharmacy.models import Medicine, Lot
+from pharmacy.models import Medicine, Lot, Illness
 
 
 class Bottle(models.Model):
@@ -38,6 +38,7 @@ class Immunotherapy(models.Model):
     total_applications = models.IntegerField('Total de aplicações')
     status = models.CharField('Status', choices=STATUS_CHOICES, max_length=20, default=IN_PROGRESS)
     bottle = models.OneToOneField(Bottle, on_delete=models.SET_NULL, null=True, blank=True)
+    illness = models.ForeignKey(Illness, on_delete=models.SET_NULL, null=True, verbose_name='Doença')
 
     class Meta:
         ordering = ('status', 'start_date', )
