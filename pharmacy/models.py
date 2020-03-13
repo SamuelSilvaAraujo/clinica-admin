@@ -67,7 +67,7 @@ class Lot(models.Model):
 class FreeSample(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, verbose_name='Paciente')
     medicine = models.ForeignKey(Medicine, on_delete=models.CASCADE, verbose_name='Medicamento')
-    date = models.DateField('Data', default=timezone.now())
+    date = models.DateField('Data')
 
     def __str__(self):
         return "{} - {}".format(self.medicine.name, self.patient.name)
