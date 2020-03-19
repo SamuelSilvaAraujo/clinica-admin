@@ -38,6 +38,7 @@
                             <tr>
                                 <th></th>
                                 <th>Paciente</th>
+                                <th>Convênio</th>
                                 <th>Data</th>
                                 <th style="width: 10%"></th>
                             </tr>
@@ -48,6 +49,9 @@
                                     <td></td>
                                     <td>
                                         {{ spirometry.patient.name }}
+                                    </td>
+                                    <td>
+                                        {{ spirometry.patient.convenio }}
                                     </td>
                                     <td>
                                         {{ spirometry.date|date:'d/m/Y' }}
@@ -108,6 +112,7 @@
                         "defaultContent": ''
                     },
                     { "data": "patient" },
+                    { "data": "convenio" },
                     { "data": "date" },
                     {  },
                 ],

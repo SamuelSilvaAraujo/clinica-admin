@@ -25,6 +25,7 @@
                             <thead>
                             <tr>
                                 <th>Paciente</th>
+                                <th>Convênio</th>
                                 <th>Remedio</th>
                                 <th>Data de Inicio</th>
                                 <th>Status</th>
@@ -37,6 +38,7 @@
                                     <td>
                                         <a href="{% url 'immunotherapy_detail' imuno.id %}">{{ imuno.patient.name }}</a>
                                     </td>
+                                    <td>{{ imuno.patient.convenio }}</td>
                                     <td>{{ imuno.medicine.name }}</td>
                                     <td>{{ imuno.start_date|date:'d/m/Y' }}</td>
                                     <td>{{ imuno.get_status_display}}</td>
