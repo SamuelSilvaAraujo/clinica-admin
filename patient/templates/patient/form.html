@@ -98,17 +98,17 @@
                 });
                 vanillaTextMask.maskInput({
                     inputElement: $('#{{form.phone.id_for_label}}')[0],
-                    mask: ['(', /[1-9]/, /\d/, ')', ' ', /\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/],
+                    mask: ['(', /[0-9]/, /\d/, ')', ' ', /\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/],
                     guide: false
                 });
                 vanillaTextMask.maskInput({
                     inputElement: $('#{{form.cpf.id_for_label}}')[0],
-                    mask: [ /[1-9]/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, '-',/\d/, /\d/, /\d/, '.', /\d/, /\d/],
+                    mask: [ /[0-9]/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, '-',/\d/, /\d/, /\d/, '.', /\d/, /\d/],
                     guide: false
                 });
                 vanillaTextMask.maskInput({
                     inputElement: $('#{{form.rg.id_for_label}}')[0],
-                    mask: [ /[1-9]/, /\d/, /\d/, /\d/, /\d/, /\d/,/\d/, '-', /\d/],
+                    mask: [ /[0-9]/, /\d/, /\d/, /\d/, /\d/, /\d/,/\d/, '-', /\d/],
                     guide: false
                 });
             });

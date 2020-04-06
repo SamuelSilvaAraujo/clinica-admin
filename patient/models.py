@@ -32,7 +32,7 @@ class Patient(models.Model):
         ('TO', 'Tocantins')
     ]
 
-    name = models.CharField('Nome', max_length=30)
+    name = models.CharField('Nome', max_length=150)
     birth_date = models.DateField('Data de Nascimento')
     address = models.CharField('Endereço', max_length=100)
     city = models.CharField('Cidade', max_length=50)
