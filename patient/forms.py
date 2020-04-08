@@ -4,7 +4,15 @@ from .models import Patient
 
 
 class PatientForm(forms.ModelForm):
+
     class Meta:
+        CONVENIO_CHOICES = [
+            ('UNIMED', 'UNIMED'),
+            ('SUS', 'SUS'),
+            ('PARTICULAR', 'PARTICULAR'),
+            ('OUTROS', 'OUTROS'),
+        ]
+
         model = Patient
         fields = ('name', 'birth_date', 'phone', 'rg', 'cpf', 'address', 'state', 'city', 'convenio', )
         widgets = {
@@ -16,7 +24,7 @@ class PatientForm(forms.ModelForm):
             'address': forms.TextInput(attrs={'class': 'form-control'}),
             'state': forms.Select(attrs={'class': 'form-control'}),
             'city': forms.TextInput(attrs={'class': 'form-control'}),
-            'convenio': forms.TextInput(attrs={'class': 'form-control'})
+            'convenio': forms.Select(attrs={'class': 'form-control'}, choices=CONVENIO_CHOICES)
         }
 
 
