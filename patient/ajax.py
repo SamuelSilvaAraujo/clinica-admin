@@ -32,7 +32,7 @@ def get_cities_ajax(request):
 
         file_path = settings.BASE_DIR + '/static/files/estados-cidades.json'
 
-        with open(file_path, "r") as read_file:
+        with open(file_path, "r", encoding='utf8') as read_file:
             data = json.load(read_file)
 
             states = data['estados']
