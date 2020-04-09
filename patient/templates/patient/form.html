@@ -59,12 +59,12 @@
 
                         <div class="form-group row">
                             <div class="col-sm-6">
-                                <label for="{{ form.city.id_for_label }}">{{ form.city.label }}{% if form.city.field.required %}*{% endif %}</label>
-                                {{ form.city }}
-                            </div>
-                            <div class="col-sm-6">
                                 <label for="{{ form.state.id_for_label }}">{{ form.state.label }}{% if form.state.field.required %}*{% endif %}</label>
                                 {{ form.state }}
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="{{ form.city.id_for_label }}">{{ form.city.label }}{% if form.city.field.required %}*{% endif %}</label>
+                                {{ form.city }}
                             </div>
                         </div>
 
@@ -111,6 +111,24 @@
                     mask: [ /[0-9]/, /\d/, /\d/, /\d/, /\d/, /\d/,/\d/, '-', /\d/],
                     guide: false
                 });
+            });
+
+            $('#{{ form.state.id_for_label }}').change(function () {
+                $.ajax({
+                    url: '{% url 'get_cities_ajax' %}',
+                    type: 'GET',
+                    data: {
+                        'state': $(this).val()
+                    },
+                    success: function (res) {
+                        var options = $('#{{ form.city.id_for_label }}');
+                        options.find('option').remove();
+                        options.append(new Option('-------', ''));
+                        $.each(res, function (key, value) {
+                            options.append(new Option(value, value))
+                        });
+                    }
+                })
             });
         })
 

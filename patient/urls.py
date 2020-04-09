@@ -1,6 +1,6 @@
 from django.urls import path, include
 from .views import *
-from .ajax import get_patients_ajax
+from .ajax import get_patients_ajax, get_cities_ajax
 
 urlpatterns = [
     path('', PatientListView.as_view(), name='patients'),
@@ -11,5 +11,10 @@ urlpatterns = [
         path('perfil/', PatientDetailView.as_view(), name='patient_detail'),
         path('photo/', patient_photo_update, name='patient_photo'),
     ])),
-    path('ajax/list/', get_patients_ajax, name='ajax_patients'),
+
+    path('ajax/', include([
+        path('patients/list/', get_patients_ajax, name='ajax_patients'),
+        path('cities/', get_cities_ajax, name='get_cities_ajax'),
+    ]))
+
 ]
