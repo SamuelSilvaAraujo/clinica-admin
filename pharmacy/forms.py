@@ -36,10 +36,10 @@ class MedicineForm(forms.ModelForm):
 
 
 class LotForm(forms.ModelForm):
-    entry_date = forms.DateField(label='Data de Entrada', input_formats=['%d-%m-%Y'],
+    entry_date = forms.DateField(label='Data de Entrada', input_formats=['%d/%m/%Y'],
                                  widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': '__/__/____'}))
 
-    shelf_life_date = forms.DateField(label='Data de Validade', input_formats=['%d-%m-%Y'],
+    shelf_life_date = forms.DateField(label='Data de Validade', input_formats=['%d/%m/%Y'],
                                       widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': '__/__/____'}))
 
     class Meta:
