@@ -25,7 +25,7 @@ class Medicine(models.Model):
     category = models.ForeignKey(MedicineCategory, on_delete=models.SET_NULL, null=True, verbose_name='Categoria')
     illness = models.ManyToManyField(Illness, verbose_name='Doenças', blank=True)
     composition = models.TextField('Composição')
-    volume = models.FloatField('Volume')
+    volume = models.CharField('Volume', max_length=10)
     supplier = models.CharField('Fornecedor', max_length=200)
 
     def __str__(self):

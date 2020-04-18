@@ -30,7 +30,7 @@ class MedicineForm(forms.ModelForm):
             'category': forms.Select(attrs={'class':  'form-control'}),
             'illness': forms.SelectMultiple(attrs={'class': ''}),
             'composition': forms.Textarea(attrs={'class': 'form-control'}),
-            'volume': forms.NumberInput(attrs={'class': 'form-control'}),
+            'volume': forms.TextInput(attrs={'class': 'form-control'}),
             'supplier': forms.TextInput(attrs={'class': 'form-control'})
         }
 
