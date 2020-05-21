@@ -33,11 +33,13 @@
                     <div class="row">
                         <div class="col-md-12">
                             <h5 class="sizes mb-2"><b>Data de nascimento: </b>
-                                <span class="size" data-toggle="tooltip" title="small"> {{ patient.birth_date|date:'d/m/Y' }}</span>
+                                <span class="size" data-toggle="tooltip" title="small"> {{ patient.birth_date|date:'d/m/Y'|default:"Não informado" }}</span>
                             </h5>
-                            <h5 class="sizes mb-2"><b>Idade: </b>
-                                <span class="size" data-toggle="tooltip" title="small">{{patient.birth_date|age}} anos</span>
-                            </h5>
+                            {% if patient.birth_date %}
+                                <h5 class="sizes mb-2"><b>Idade: </b>
+                                    <span class="size" data-toggle="tooltip" title="small">{{patient.birth_date|age}} anos</span>
+                                </h5>
+                            {% endif %}
                             <h5 class="sizes mb-2"><b>CPF: </b>
                                 <span class="size" data-toggle="tooltip" title="small">{{ patient.cpf|default:'Não informado' }}</span>
                             </h5>

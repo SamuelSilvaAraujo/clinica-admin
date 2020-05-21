@@ -33,7 +33,7 @@ class Patient(models.Model):
     ]
 
     name = models.CharField('Nome', max_length=150)
-    birth_date = models.DateField('Data de Nascimento')
+    birth_date = models.DateField('Data de Nascimento', null=True, blank=True)
     address = models.CharField('Endereço', max_length=100)
     city = models.CharField('Cidade', max_length=50)
     state = models.CharField('Estado', max_length=2, choices=STATES_CHOICES)
