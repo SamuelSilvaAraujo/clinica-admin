@@ -10,6 +10,7 @@ class PatientForm(forms.ModelForm):
             ('UNIMED', 'UNIMED'),
             ('SUS', 'SUS'),
             ('PARTICULAR', 'PARTICULAR'),
+            ('CRIA', 'CRIA'),
             ('OUTROS', 'OUTROS'),
         ]
 
