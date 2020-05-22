@@ -20,7 +20,7 @@ def report_patients_ajax(request):
 
         if dates_str:
             start, end = datetime.strptime(dates_str[0], '%d/%m/%Y'), datetime.strptime(dates_str[1], '%d/%m/%Y')
-            q_objects.add(Q(start_date__gte=start, end_date__lte=end), Q.AND)
+            q_objects.add(Q(end_date__gte=start, end_date__lte=end), Q.AND)
 
         immunotherapies = Immunotherapy.objects.filter(q_objects) \
             .order_by('patient') \
