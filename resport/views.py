@@ -1,6 +1,8 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
 
+from immunotherapy.models import Immunotherapy
+
 
 class ReportsView(LoginRequiredMixin, TemplateView):
     template_name = 'report/reports.html'
@@ -17,6 +19,7 @@ class ReportPatientView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(ReportPatientView, self).get_context_data(**kwargs)
         context["reportMenu"] = "active"
+        context["status_choices"] = list(Immunotherapy.STATUS_CHOICES)
         return context
 
 

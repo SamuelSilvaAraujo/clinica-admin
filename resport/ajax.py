@@ -1,7 +1,7 @@
 import json
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.core.serializers.json import DjangoJSONEncoder
 
 from datetime import datetime
@@ -16,15 +16,24 @@ def report_patients_ajax(request):
         date_range = request.GET.get('date_range')
         dates_str = date_range.split(' - ')
 
-        q_objects = Q(status=Immunotherapy.FINISHED)
+        status = request.GET.get('status')
+
+        print(status)
+
+        q_objects = Q()
 
         if dates_str:
             start, end = datetime.strptime(dates_str[0], '%d/%m/%Y'), datetime.strptime(dates_str[1], '%d/%m/%Y')
-            q_objects.add(Q(end_date__gte=start, end_date__lte=end), Q.AND)
+            q_objects.add(Q(start_date__gte=start, start_date__lte=end), Q.AND)
+
+        if status and status != 'all':
+            q_objects.add(Q(status=status), Q.AND)
 
         immunotherapies = Immunotherapy.objects.filter(q_objects) \
             .order_by('patient') \
-            .values('patient__name',  'start_date', 'end_date', 'illness__name', 'medicine__name', 'bottle__bottle_number')
+            .annotate(realized_applications=Count('bottle__application')) \
+            .values('patient__name',  'start_date', 'end_date', 'illness__name',
+                    'medicine__name', 'bottle__bottle_number', 'total_applications', 'realized_applications')
 
         data = json.dumps({'aaData': list(immunotherapies)}, cls=DjangoJSONEncoder)
     else:

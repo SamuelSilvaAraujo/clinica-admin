@@ -21,8 +21,17 @@
             <div class="ui-bordered px-4 pt-4 mb-4">
                 <div class="row align-items-center">
                     <div class="col-md-6 mb-4">
-                        <label for="id_date_range" class="form-label">Data</label>
+                        <label for="id_date_range" class="form-label">Período em que foi iniciado o tratamento</label>
                         <input type="text" id="id_date_range" name="date_range" class="form-control" placeholder="__/__/____">
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <label for="id_status_select" class="form-label">Status do tratamento</label>
+                        <select type="text" id="id_status_select" class="form-control">
+                            <option value="all">Todos</option>
+                            {% for status in status_choices %}
+                                <option value="{{ status.0 }}">{{ status.1 }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                 </div>
             </div>
@@ -38,6 +47,8 @@
                         <th>Paciente</th>
                         <th>Data de início</th>
                         <th>Data de Fim</th>
+                        <th>Total de aplicações</th>
+                        <th>Aplicações realizadas</th>
                         <th>Doença</th>
                         <th>Medicamento</th>
                         <th>Frasco</th>
@@ -74,6 +85,7 @@
             var end = moment();
 
             var $date_range = $('#id_date_range');
+            var $status_select = $('#id_status_select');
 
             $date_range.daterangepicker({
                 startDate: start,
@@ -127,6 +139,7 @@
                 language: {
                     url: '//cdn.datatables.net/plug-ins/1.10.19/i18n/Portuguese-Brasil.json'
                 },
+                pageLength: 50,
                 dom: 'Bfrtip',
                 buttons: [
                     { extend: 'print', text: 'Imprimir' }
@@ -146,12 +159,30 @@
                             if(type === "sort" || type === "type"){
                                 return data;
                             }
-                            return moment(data).format("DD/MM/YYYY");
+
+                            if(data != null){
+                                return moment(data).format("DD/MM/YYYY");
+                            }else {
+                                return "Em andamento"
+                            }
                         }
+                    },
+                    {
+                        'data':'total_applications'
+                    },
+                    {
+                        'data': 'realized_applications'
                     },
                     {'data': 'illness__name'},
                     {'data': 'medicine__name'},
-                    {'data': 'bottle__bottle_number'}
+                    {'data': 'bottle__bottle_number',
+                        render: function (data, type, row) {
+                            if (data != null){
+                                return data;
+                            }else {
+                                return "Não cadastrado"
+                            }
+                        }}
                 ],
                 ajax: {
                     "url": "{% url 'report_patients_ajax' %}",
@@ -170,12 +201,18 @@
             function get_form_values() {
                 return {
                     'date_range': $date_range.val(),
+                    'status': $status_select.val()
                 };
             }
 
             $date_range.change(function () {
                 table.ajax.reload();
             });
+
+            $status_select.change(function () {
+                table.ajax.reload();
+            });
+
         });
 
     </script>
