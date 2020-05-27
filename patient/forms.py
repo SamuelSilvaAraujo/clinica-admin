@@ -24,7 +24,7 @@ class PatientForm(forms.ModelForm):
             'cpf': forms.TextInput(attrs={'class': 'form-control'}),
             'address': forms.TextInput(attrs={'class': 'form-control'}),
             'state': forms.Select(attrs={'class': 'form-control'}),
-            'city': forms.Select(attrs={'class': 'form-control'}),
+            'city': forms.TextInput(attrs={'class': 'form-control'}),
             'convenio': forms.Select(attrs={'class': 'form-control'}, choices=CONVENIO_CHOICES)
         }
 
