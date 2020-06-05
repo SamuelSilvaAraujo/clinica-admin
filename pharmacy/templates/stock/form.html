@@ -32,31 +32,21 @@
                         </div>
 
                         <div class="form-group row">
-                            <div class="col-sm-6">
-                                <label for="{{ form.number.id_for_label }}">{{ form.number.label }}{% if form.number.field.required %}*{% endif %}</label>
-                                {{ form.number }}
-                                {% for error in form.number.errors %}
-                                    <span class="help-block">{{ error }}</span>
-                                {% endfor %}
-                            </div>
-                            <div class="col-sm-6">
+                            <div class="col-sm-4">
                                 <label for="{{ form.amount.id_for_label }}">{{ form.amount.label }}{% if form.amount.field.required %}*{% endif %}</label>
                                 {{ form.amount }}
                                 {% for error in form.amount.errors %}
                                     <span class="help-block">{{ error }}</span>
                                 {% endfor %}
                             </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <div class="col-sm-6">
+                            <div class="col-sm-4">
                                 <label for="{{ form.entry_date.id_for_label }}">{{ form.entry_date.label }}{% if form.entry_date.field.required %}*{% endif %}</label>
                                 {{ form.entry_date }}
                                 {% for error in form.entry_date.errors %}
                                     <span class="help-block">{{ error }}</span>
                                 {% endfor %}
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-sm-4">
                                 <label for="{{ form.shelf_life_date.id_for_label }}">{{ form.shelf_life_date.label }}{% if form.shelf_life_date.field.required %}*{% endif %}</label>
                                 {{ form.shelf_life_date }}
                                 {% for error in form.shelf_life_date.errors %}

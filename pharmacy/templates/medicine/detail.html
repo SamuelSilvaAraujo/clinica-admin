@@ -25,6 +25,10 @@
             <h5 class="sizes mb-2"><b>Composição: </b>
                 {{ medicine.composition|default:'Não informado' }}
             </h5>
+
+            <h5 class="sizes mb-2"><b>Total em Estoque: </b>
+                {{ medicine.total_in_stock }}
+            </h5>
         </div>
         <div class="col-lg-6">
             <h5 class="sizes mb-2"><b>Volume: </b>
@@ -52,28 +56,23 @@
                     <table class="table table-hover table-striped" id="dataTable">
                         <thead>
                         <tr>
-                            <th>Numero</th>
                             <th>Data de entrada</th>
                             <th>Data de vencimento</th>
                             <th>Quantidade</th>
-                            <th>Quantidade Atual</th>
                         </tr>
                         </thead>
                         <tbody>
                         {% for lot in medicine.lot_set.all %}
                             <tr>
-                                <td>{{ lot.number }}</td>
                                 <td>{{ lot.entry_date|date:'d/m/Y' }}</td>
                                 <td>{{ lot.shelf_life_date|date:'d/m/Y' }}</td>
                                 <td>{{ lot.amount }}</td>
-                                <td>{{ lot.current_amount }}</td>
                             </tr>
                         {% endfor %}
                         </tbody>
                         <tfoot>
                         <tr>
-                            <th colspan="3">Total</th>
-                            <th class="text-center"></th>
+                            <th colspan="2">Total</th>
                             <th class="text-center"></th>
                         </tr>
                         </tfoot>
@@ -98,10 +97,10 @@
                 language: {
                     url: '//cdn.datatables.net/plug-ins/1.10.19/i18n/Portuguese-Brasil.json'
                 },
-                order: [[ 1, "asc" ], [ 2, "asc" ]],
+                order: [[ 0, "asc" ], [ 1, "asc" ]],
+                searching: false,
                 columnDefs: [
-                    {"className": "text-center", "targets": 3},
-                    {"className": "text-center", "targets": 4},
+                    {"className": "text-center", "targets": 2},
                 ],
                 footerCallback: function ( row, data, start, end, display ) {
                     var api = this.api(), data;
@@ -116,25 +115,15 @@
 
                     // Total over all pages
                     total = api
-                        .column( 3 )
-                        .data()
-                        .reduce( function (a, b) {
-                            return intVal(a) + intVal(b);
-                        }, 0 );
-
-                    currentTotal = api
-                        .column( 4 )
+                        .column( 2 )
                         .data()
                         .reduce( function (a, b) {
                             return intVal(a) + intVal(b);
                         }, 0 );
 
                     // Update footer
-                    $( api.column( 3 ).footer() ).html(
+                    $( api.column( 2 ).footer() ).html(
                         total
-                    );
-                    $( api.column( 4 ).footer() ).html(
-                        currentTotal
                     );
                 }
             });

@@ -44,14 +44,12 @@
                 <table class="table" id="dataTable">
                     <thead>
                     <tr>
-                        <th>Paciente</th>
-                        <th>Data de início</th>
-                        <th>Data de Fim</th>
-                        <th>Total de aplicações</th>
-                        <th>Aplicações realizadas</th>
-                        <th>Doença</th>
-                        <th>Medicamento</th>
-                        <th>Frasco</th>
+                        <th class="text-center">Paciente</th>
+                        <th class="text-center">Data de início</th>
+                        <th class="text-center">Data de Fim</th>
+                        <th class="text-center">Frascos usados</th>
+                        <th class="text-center">Doença</th>
+                        <th class="text-center">Medicamento</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -144,6 +142,11 @@
                 buttons: [
                     { extend: 'print', text: 'Imprimir' }
                 ],
+                columnDefs: [
+                    {
+                        "targets": [0, 1, 2, 3, 4, 5],
+                        "className": "text-center",
+                    }],
                 columns: [
                     {'data': 'patient__name'},
                     {'data': 'start_date',
@@ -168,21 +171,11 @@
                         }
                     },
                     {
-                        'data':'total_applications'
-                    },
-                    {
-                        'data': 'realized_applications'
+                        'data':'bottles_used'
                     },
                     {'data': 'illness__name'},
                     {'data': 'medicine__name'},
-                    {'data': 'bottle__bottle_number',
-                        render: function (data, type, row) {
-                            if (data != null){
-                                return data;
-                            }else {
-                                return "Não cadastrado"
-                            }
-                        }}
+
                 ],
                 ajax: {
                     "url": "{% url 'report_patients_ajax' %}",

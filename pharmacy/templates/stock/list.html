@@ -17,29 +17,25 @@
 
 {% block content %}
     <div class="card mb-4">
-        <div class="card-body">
+        <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table" id="dataTable">
+                <table class="table m-0" id="dataTable">
                     <thead>
                     <tr>
-                        <th>Numero</th>
                         <th>Remédio</th>
                         <th>Data de entrada</th>
                         <th>Data de vencimento</th>
                         <th>Quantidade</th>
-                        <th>Quantidade atual</th>
                         <th style="width: 10%"></th>
                     </tr>
                     </thead>
                     <tbody>
                     {% for lot in object_list %}
                         <tr>
-                            <td>{{ lot.number }}</td>
                             <td>{{ lot.medicine.name }}</td>
                             <td>{{ lot.entry_date|date:'d/m/Y' }}</td>
                             <td>{{ lot.shelf_life_date|date:'d/m/Y' }}</td>
                             <td>{{ lot.amount }}</td>
-                            <td>{{ lot.current_amount }}</td>
                             <td>
                                 <form method="post" action="{% url 'lot_delete' lot.id %}" class="p-0 m-0">
                                     {% csrf_token %}

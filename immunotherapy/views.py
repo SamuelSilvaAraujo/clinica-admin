@@ -6,7 +6,7 @@ from datetime import datetime
 
 from patient.models import Patient
 from .models import Immunotherapy, Bottle, Application
-from .forms import ImmunotherapyForm, BottleForm, ApplicationForm, ImmunotherapyFinisheForm
+from .forms import ImmunotherapyForm, StartBottleForm, ApplicationForm, ImmunotherapyFinisheForm, EndBottleForm
 
 
 class ImmunotherapyListView(LoginRequiredMixin, ListView):
@@ -106,7 +106,7 @@ class ImmunotherapyDetailView(LoginRequiredMixin, DetailView):
 class BottleCreateView(LoginRequiredMixin, CreateView):
     model = Bottle
     template_name = 'bottle/form-modal.html'
-    form_class = BottleForm
+    form_class = StartBottleForm
 
     def get_immunotherapy(self):
         immunotherapy_id = self.kwargs['immunotherapy_id']
@@ -118,17 +118,40 @@ class BottleCreateView(LoginRequiredMixin, CreateView):
         context["immunotherapy"] = self.get_immunotherapy()
         return context
 
-    def get_form_kwargs(self, **kwargs):
-        form_kwargs = super(BottleCreateView, self).get_form_kwargs()
-        form_kwargs["immunotherapy"] = self.get_immunotherapy()
-        return form_kwargs
+    def get_initial(self):
+        initial = super(BottleCreateView, self).get_initial()
+        initial = initial.copy()
+        initial['start_date'] = datetime.today().strftime("%d/%m/%Y")
+        return initial
 
     def form_valid(self, form):
-        response = super(BottleCreateView, self).form_valid(form)
-        immunotherapy = self.get_immunotherapy()
-        immunotherapy.bottle = self.object
-        immunotherapy.save()
-        return response
+        form.instance.immunotherapy = self.get_immunotherapy()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('immunotherapy_detail', kwargs={'pk': self.kwargs['immunotherapy_id']})
+
+
+class BottleFinalizeView(LoginRequiredMixin, UpdateView):
+    model = Bottle
+    form_class = EndBottleForm
+    template_name = "bottle/form-finalize-modal.html"
+
+    def get_immunotherapy(self):
+        immunotherapy_id = self.kwargs['immunotherapy_id']
+        immunotherapy = Immunotherapy.objects.get(id=immunotherapy_id)
+        return immunotherapy
+
+    def get_context_data(self, **kwargs):
+        context = super(BottleFinalizeView, self).get_context_data(**kwargs)
+        context["immunotherapy"] = self.get_immunotherapy()
+        return context
+
+    def get_initial(self):
+        initial = super(BottleFinalizeView, self).get_initial()
+        initial = initial.copy()
+        initial['end_date'] = datetime.today().strftime("%d/%m/%Y")
+        return initial
 
     def get_success_url(self):
         return reverse('immunotherapy_detail', kwargs={'pk': self.kwargs['immunotherapy_id']})
@@ -156,7 +179,7 @@ class ApplicationCreateView(LoginRequiredMixin, CreateView):
         return initial
 
     def form_valid(self, form):
-        form.instance.bottle = self.get_immunotherapy().bottle
+        form.instance.bottle = self.get_immunotherapy().bottle_in_use()
         return super().form_valid(form)
 
     def get_success_url(self):

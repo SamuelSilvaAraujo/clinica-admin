@@ -44,11 +44,10 @@ class LotForm(forms.ModelForm):
 
     class Meta:
         model = Lot
-        fields = ('medicine', 'amount', 'entry_date', 'shelf_life_date', 'number')
+        fields = ('medicine', 'amount', 'entry_date', 'shelf_life_date', )
         widgets = {
             'medicine': forms.Select(attrs={'class': 'form-control'}),
             'amount': forms.NumberInput(attrs={'class': 'form-control'}),
-            'number': forms.TextInput(attrs={'class': 'form-control', 'type': 'number'}),
         }
 
 

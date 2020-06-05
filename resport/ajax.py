@@ -1,7 +1,7 @@
 import json
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
-from django.db.models import Q, Count
+from django.db.models import Q, Count, Value, IntegerField
 from django.core.serializers.json import DjangoJSONEncoder
 
 from datetime import datetime
@@ -18,8 +18,6 @@ def report_patients_ajax(request):
 
         status = request.GET.get('status')
 
-        print(status)
-
         q_objects = Q()
 
         if dates_str:
@@ -31,9 +29,9 @@ def report_patients_ajax(request):
 
         immunotherapies = Immunotherapy.objects.filter(q_objects) \
             .order_by('patient') \
-            .annotate(realized_applications=Count('bottle__application')) \
-            .values('patient__name',  'start_date', 'end_date', 'illness__name',
-                    'medicine__name', 'bottle__bottle_number', 'total_applications', 'realized_applications')
+            .annotate(bottles_used=Count('bottle')) \
+            .values('patient__name', 'start_date', 'end_date', 'illness__name',
+                    'medicine__name', 'bottles_used')
 
         data = json.dumps({'aaData': list(immunotherapies)}, cls=DjangoJSONEncoder)
     else:
@@ -56,7 +54,7 @@ def report_stock_ajax(request):
 
         lots = Lot.objects.filter(q_objects) \
             .order_by('medicine') \
-            .values('medicine__name', 'medicine__supplier', 'entry_date', 'shelf_life_date', 'amount', 'number')
+            .values('medicine__name', 'medicine__supplier', 'entry_date', 'shelf_life_date', 'amount')
 
         data = json.dumps({'aaData': list(lots)}, cls=DjangoJSONEncoder)
     else:
