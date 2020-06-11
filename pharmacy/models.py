@@ -33,8 +33,12 @@ class Medicine(models.Model):
         for lot in self.lot_set.all():
             total += lot.amount
         for immunotherapy in self.immunotherapy_set.all():
-            total -= immunotherapy.bottle_set.count()
+            last_application = immunotherapy.last_application()
+            if last_application:
+                total -= last_application.bottle_number
         total -= self.freesample_set.count()
+        if total < 0:
+            return 0
         return total
 
 

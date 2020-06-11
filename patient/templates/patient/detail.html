@@ -67,7 +67,8 @@
                                     <th>Remedio</th>
                                     <th>Data de Inicio</th>
                                     <th>Data de Fim</th>
-                                    <th>Status</th>
+                                    <th>Frasco</th>
+                                    <th>Aplicação</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -77,8 +78,9 @@
                                             <a href="{% url 'immunotherapy_detail' imunotherapy.id %}">{{ imunotherapy.medicine.name }}</a>
                                         </td>
                                         <td>{{ imunotherapy.start_date|date:'d/m/Y' }}</td>
-                                        <td>{{ imunotherapy.end_date|date:'d/m/Y'|default:'Não informada' }}</td>
-                                        <td>{{ imunotherapy.get_status_display }}</td>
+                                        <td>{{ imunotherapy.end_date|date:'d/m/Y'|default:'Em Andamento' }}</td>
+                                        <td>{{ imunotherapy.last_application.bottle_number|default:1 }}</td>
+                                        <td>{{ imunotherapy.last_application.application_number|default:1 }}</td>
                                     </tr>
                                 {% endfor %}
                                 </tbody>

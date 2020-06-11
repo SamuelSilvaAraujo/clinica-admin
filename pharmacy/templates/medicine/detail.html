@@ -41,7 +41,9 @@
 
             <h5><b>Doenças tratáveis: </b><br>
                 {% for illness in medicine.illness.all %}
-                    <span class="" data-toggle="tooltip" title="small">{{ illness.name }}</span> <br>
+                    <span class="" data-toggle="tooltip" title="small">{{ illness.name }}</span>
+                {% empty %}
+                    <span class="" data-toggle="tooltip" title="small">Nenhuma Doença cadastrada.</span>
                 {% endfor %}
             </h5>
         </div>

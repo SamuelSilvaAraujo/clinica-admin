@@ -35,7 +35,7 @@ class Immunotherapy(models.Model):
 class Application(models.Model):
     immunotherapy = models.ForeignKey(Immunotherapy, on_delete=models.CASCADE)
     bottle_number = models.IntegerField("Frasco")
-    application_number = models.IntegerField("Applicação")
+    application_number = models.IntegerField("Dose")
     date = models.DateField('Data')
     applicator = models.CharField('Aplicador', max_length=50)
     dosage = models.CharField('Dosagem', max_length=10)
