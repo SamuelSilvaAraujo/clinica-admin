@@ -48,6 +48,7 @@
                         <th class="text-center">Data de início</th>
                         <th class="text-center">Data de Fim</th>
                         <th class="text-center">Frascos usados</th>
+                        <th class="text-center">Aplicações realizadas</th>
                         <th class="text-center">Doença</th>
                         <th class="text-center">Medicamento</th>
                     </tr>
@@ -144,9 +145,10 @@
                 ],
                 columnDefs: [
                     {
-                        "targets": [0, 1, 2, 3, 4, 5],
+                        "targets": [0, 1, 2, 3, 4, 5, 6],
                         "className": "text-center",
-                    }],
+                    }
+                ],
                 columns: [
                     {'data': 'patient__name'},
                     {'data': 'start_date',
@@ -171,11 +173,13 @@
                         }
                     },
                     {
-                        'data':'bottles_used'
+                        'data':'bottle_number'
+                    },
+                    {
+                        'data':'application_number'
                     },
                     {'data': 'illness__name'},
                     {'data': 'medicine__name'},
-
                 ],
                 ajax: {
                     "url": "{% url 'report_patients_ajax' %}",

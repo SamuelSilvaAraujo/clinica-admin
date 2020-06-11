@@ -27,13 +27,26 @@ def report_patients_ajax(request):
         if status and status != 'all':
             q_objects.add(Q(status=status), Q.AND)
 
-        immunotherapies = Immunotherapy.objects.filter(q_objects) \
-            .order_by('patient') \
-            .annotate(bottles_used=Count('bottle')) \
-            .values('patient__name', 'start_date', 'end_date', 'illness__name',
-                    'medicine__name', 'bottles_used')
+        result = []
 
-        data = json.dumps({'aaData': list(immunotherapies)}, cls=DjangoJSONEncoder)
+        immunotherapies = Immunotherapy.objects \
+            .filter(q_objects) \
+            .order_by('patient')
+
+        for immunotherapy in immunotherapies:
+            value = immunotherapies.values('patient__name', 'start_date', 'end_date', 'illness__name',
+                                           'medicine__name').first()
+            last_application = immunotherapy.last_application()
+            if last_application:
+                value['bottle_number'] = last_application.bottle_number
+                value['application_number'] = last_application.application_number
+            else:
+                value['bottle_number'] = 1
+                value['application_number'] = 0
+
+            result.append(value)
+
+        data = json.dumps({'aaData': result}, cls=DjangoJSONEncoder)
     else:
         data = 'fail'
 

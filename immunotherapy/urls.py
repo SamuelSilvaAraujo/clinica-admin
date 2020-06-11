@@ -13,8 +13,6 @@ urlpatterns = [
         path('finalizar/', ImmunotherapyFinisheView.as_view(), name='immunotherapy_finishe'),
     ])),
 
-    path('<int:immunotherapy_id>/adiconar/frasco/', BottleCreateView.as_view(), name='bottle_create'),
-    path('<int:immunotherapy_id>/finalizar/frasco/<int:pk>/', BottleFinalizeView.as_view(), name='bottle_finalize'),
     path('<int:immunotherapy_id>/adiconar/aplicacao/', ApplicationCreateView.as_view(), name='application_create'),
 
 ]

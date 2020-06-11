@@ -12,18 +12,9 @@
     <h2>
         {{ immunotherapy.patient.name }}&nbsp
         {% if immunotherapy.status == immunotherapy.IN_PROGRESS %}
-            {% if not immunotherapy.bottle_in_use %}
-                <button class="btn btn-sm btn-primary" data-remote="{% url 'bottle_create' immunotherapy.id %}"  data-toggle="modal" data-target="#startBottleModal">
-                    Iniciar Frasco
-                </button>
-            {% else %}
-                <button class="btn btn-sm btn-danger" data-remote="{% url 'bottle_finalize' immunotherapy.id immunotherapy.bottle_in_use.id %}"  data-toggle="modal" data-target="#finalizeBottleModal">
-                    Finalizar frasco
-                </button>
-                <button class="btn btn-sm btn-primary" data-remote="{% url 'application_create' immunotherapy.id %}"  data-toggle="modal" data-target="#applicationModal">
-                    Cadastrar Aplicação
-                </button>
-            {% endif %}
+            <button class="btn btn-sm btn-primary" data-remote="{% url 'application_create' immunotherapy.id %}"  data-toggle="modal" data-target="#applicationModal">
+                Cadastrar Aplicação
+            </button>
             <button type="button" class="btn btn-sm btn-success" {% if immunotherapy.bottle_in_use %} onclick="return alert('Finalize o frasco em uso antes de finalizar a imunoterapia!')" {% else %} data-remote="{% url 'immunotherapy_finishe' immunotherapy.id %}"  data-toggle="modal" data-target="#finisheModal" {% endif %}>
                 Finalizar Imunoterapia
             </button>
@@ -57,19 +48,14 @@
             <h5 class="sizes"><b>Total de Frascos:</b>
                 <span class="size" data-toggle="tooltip" title="small">{{ immunotherapy.total_bottles }}</span>
             </h5>
-            <h5 class="sizes"><b>Frascos usado:</b>
-                <span class="size" data-toggle="tooltip" title="small">{{ immunotherapy.bottle_set.count|default:0 }}</span>
+            <h5 class="sizes"><b>Frasco Atual:</b>
+                <span class="size" data-toggle="tooltip" title="small">{{ immunotherapy.last_application.bottle_number|default:1 }}</span>
             </h5>
-            {% if immunotherapy.status == immunotherapy.IN_PROGRESS %}
-                <h5 class="sizes">
-                    <b>Numero do frasco em uso:</b>
-                    <span class="size" data-toggle="tooltip" title="small">
-                {{ immunotherapy.bottle_in_use.number|default:"Nenhum frasco iniciado" }}
-                </span>
-                </h5>
-            {% endif %}
-            <h5 class="sizes"><b>Aplicações realizadas:</b>
-                <span class="size" data-toggle="tooltip" title="small">{{ immunotherapy.realized_applications }}</span>
+            <h5 class="sizes"><b>Total de aplicações por frasco:</b>
+                <span class="size" data-toggle="tooltip" title="small">{{ immunotherapy.total_applications }}</span>
+            </h5>
+            <h5 class="sizes"><b>Aplicação Atual:</b>
+                <span class="size" data-toggle="tooltip" title="small">{{ immunotherapy.last_application.application_number|default:'Nenhuma aplicação realizada' }}</span>
             </h5>
             <h5 class="sizes"><b>Data da ultima Aplicação:</b>
                 <span class="size" data-toggle="tooltip" title="small"> {{ immunotherapy.last_application.date|date:'d/m/Y'|default:'Nenhuma aplicação realizada' }}</span>
@@ -91,6 +77,7 @@
                         <table class="table" id="applicationTable">
                             <thead>
                             <tr>
+                                <th class="text-center">Aplicação</th>
                                 <th>Data</th>
                                 <th>Aplicador</th>
                                 <th>Dosagem</th>
@@ -98,33 +85,20 @@
                             </tr>
                             </thead>
                             <tbody>
-                            {% for bottle in immunotherapy.bottle_set.all %}
-                                {% for application in bottle.application_set.all %}
-                                    <tr>
-                                        <td>{{ application.date|date:'d/m/Y' }}</td>
-                                        <td>{{ application.applicator }}</td>
-                                        <td>{{ application.dosage }}</td>
-                                        <td>{{ application.bottle.number }}</td>
-                                    </tr>
-                                {% endfor %}
+                            {% for application in immunotherapy.application_set.all %}
+                                <tr>
+                                    <td class="text-center">{{ application.application_number }}</td>
+                                    <td>{{ application.date|date:'d/m/Y' }}</td>
+                                    <td>{{ application.applicator }}</td>
+                                    <td>{{ application.dosage }}</td>
+                                    <td>{{ application.bottle_number }}</td>
+                                </tr>
                             {% endfor %}
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <div class="modal inmodal fade" id="startBottleModal" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content animated bounceInRight"></div>
-        </div>
-    </div>
-
-    <div class="modal inmodal fade" id="finalizeBottleModal" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content animated bounceInRight"></div>
         </div>
     </div>
 
