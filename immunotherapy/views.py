@@ -3,12 +3,17 @@ import io
 from django.urls import reverse
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView, FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import FileResponse, HttpResponse
+from django.http import HttpResponse
 
 from datetime import datetime
 
+from reportlab.lib.enums import TA_LEFT
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.pdfgen import canvas
-from reportlab.lib.units import cm
+from reportlab.lib.units import cm, inch
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
+from reportlab.lib import colors
 
 from patient.models import Patient
 from .models import Immunotherapy, Application
@@ -198,7 +203,7 @@ class OpenTagModal(LoginRequiredMixin, FormView):
 
 def create_pdf_tag(request):
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'filename="somefilename.pdf"'
+    response['Content-Disposition'] = 'filename="etiqueta.pdf"'
 
     p = canvas.Canvas(response)
 
@@ -210,13 +215,13 @@ def create_pdf_tag(request):
 
     if dimensions == '3x2':
         p.setPageSize((3 * cm, 2 * cm))
-        p.setFontSize(6)
+        p.setFontSize(4)
         p.drawString(3, 43, patient)
         p.drawString(3, 36, "{}° frasco {}".format(bottle_number, concentration))
         p.drawString(3, 29, period)
     elif dimensions == '10x4':
         p.setPageSize((10 * cm, 4 * cm))
-        p.setFontSize(20)
+        p.setFontSize(14)
         p.drawString(5, 85, patient)
         p.drawString(5, 58, "{}° frasco {}".format(bottle_number, concentration))
         p.drawString(5, 32, period)
