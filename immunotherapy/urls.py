@@ -15,4 +15,7 @@ urlpatterns = [
 
     path('<int:immunotherapy_id>/adiconar/aplicacao/', ApplicationCreateView.as_view(), name='application_create'),
 
+    path('<int:immunotherapy_id>/imprimir/etiqueta/', OpenTagModal.as_view(), name='tag_pdf'),
+    path('criar/etiqueta/', create_pdf_tag, name="create_pdf_tag"),
+
 ]

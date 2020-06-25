@@ -18,6 +18,9 @@
             <button type="button" class="btn btn-sm btn-success" {% if immunotherapy.bottle_in_use %} onclick="return alert('Finalize o frasco em uso antes de finalizar a imunoterapia!')" {% else %} data-remote="{% url 'immunotherapy_finishe' immunotherapy.id %}"  data-toggle="modal" data-target="#finisheModal" {% endif %}>
                 Finalizar Imunoterapia
             </button>
+            <button type="button" class="btn btn-sm btn-success" data-remote="{% url 'tag_pdf' immunotherapy.id %}"  data-toggle="modal" data-target="#tagModal">
+                Imprimir Etiqueta
+            </button>
         {% endif %}
     </h2>
 {% endblock %}
@@ -109,6 +112,12 @@
     </div>
 
     <div class="modal inmodal fade" id="finisheModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content animated bounceInRight"></div>
+        </div>
+    </div>
+
+    <div class="modal inmodal fade" id="tagModal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content animated bounceInRight"></div>
         </div>

@@ -5,7 +5,7 @@
     </button>
 </div>
 <div class="modal-body">
-    <form method="post" action="{% url 'immunotherapy_finishe' immunotherapy.id %}">
+    <form method="post" action="{% url 'immunotherapy_finishe' immunotherapy.id %}" id="finish-form">
         {% csrf_token %}
 
         <div class="form-group row">
@@ -19,7 +19,7 @@
 </div>
 <div class="modal-footer">
     <button type="button" data-dismiss="modal" class="btn btn-primary">Cancelar</button>
-    <button type="button" class="btn btn-primary" onclick="return $('form').submit()">Finalizar</button>
+    <button type="button" class="btn btn-primary" onclick="return $('#finish-form').submit()">Finalizar</button>
 </div>
 
 {% block script %}

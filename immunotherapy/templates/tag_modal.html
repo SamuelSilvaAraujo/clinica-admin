@@ -1,0 +1,49 @@
+<div class="modal-header">
+    <h5 class="modal-title">Imprimir etiqueta</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <form action="{% url 'tag_pdf' immunotherapy.id %}" target="_blank" method="post" id="tag-form">
+        {% csrf_token %}
+
+        <div class="form-group row">
+            <div class="col-md-12">
+                <label for="{{ form.patient.id_for_label }}">{{ form.patient.label }}{% if form.patient.field.required %}*{% endif %}</label>
+                {{ form.patient }}
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-md-4">
+                <label for="{{ form.bottle_number.id_for_label }}">{{ form.bottle_number.label }}{% if form.bottle_number.field.required %}*{% endif %}</label>
+                {{ form.bottle_number }}
+            </div>
+            <div class="col-md-4">
+                <label for="{{ form.concentration.id_for_label }}">{{ form.concentration.label }}{% if form.concentration.field.required %}*{% endif %}</label>
+                {{ form.concentration }}
+            </div>
+            <div class="col-md-4">
+                <label for="{{ form.period.id_for_label }}">{{ form.period.label }}{% if form.concentration.field.required %}*{% endif %}</label>
+                {{ form.period }}
+            </div>
+        </div>
+        {{ form.dimensions }}
+    </form>
+</div>
+
+<div class="modal-footer">
+    <button type="button" data-dismiss="modal" class="btn btn-primary">Cancelar</button>
+    <button type="button" data-dismiss="modal" class="btn btn-primary" onclick="submitForm('3x2')">Imprimir 3x2</button>
+    <button type="button" data-dismiss="modal" class="btn btn-primary" onclick="submitForm('10x4')">Imprimir 10x4</button>
+</div>
+
+{% block script %}
+    <script>
+        function submitForm(value) {
+            $('#{{ form.dimensions.id_for_label }}').val(value);
+            $('#tag-form').submit()
+        }
+    </script>
+{% endblock %}

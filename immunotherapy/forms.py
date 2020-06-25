@@ -37,3 +37,11 @@ class ApplicationForm(forms.ModelForm):
             'bottle_number': forms.NumberInput(attrs={'class': 'form-control'}),
             'application_number': forms.NumberInput(attrs={'class': 'form-control'}),
         }
+
+
+class TagPdfForm(forms.Form):
+    patient = forms.CharField(label="Paciente", max_length=150, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    bottle_number = forms.IntegerField(label="Frasco", widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    concentration = forms.CharField(label="Concentração", max_length=20, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    period = forms.CharField(label="Periodo", max_length=20, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    dimensions = forms.CharField(max_length=10, widget=forms.HiddenInput())

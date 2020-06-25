@@ -20,17 +20,28 @@
         <div class="card-body p-0">
             <div class="ui-bordered px-4 pt-4 mb-4">
                 <div class="row align-items-center">
-                    <div class="col-md-6 mb-4">
+                    <div class="col-md-4 mb-4">
                         <label for="id_date_range" class="form-label">Período em que foi iniciado o tratamento</label>
                         <input type="text" id="id_date_range" name="date_range" class="form-control" placeholder="__/__/____">
                     </div>
-                    <div class="col-md-6 mb-4">
+                    <div class="col-md-4 mb-4">
                         <label for="id_status_select" class="form-label">Status do tratamento</label>
                         <select type="text" id="id_status_select" class="form-control">
                             <option value="all">Todos</option>
                             {% for status in status_choices %}
                                 <option value="{{ status.0 }}">{{ status.1 }}</option>
                             {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <label for="id_convenio_select" class="form-label">Convênio do paciente</label>
+                        <select type="text" id="id_convenio_select" class="form-control">
+                            <option value="all">Todos</option>
+                            <option value="UNIMED">UNIMED</option>
+                            <option value="SUS">SUS</option>
+                            <option value="PARTICULAR">PARTICULAR</option>
+                            <option value="CRIA">CRIA</option>
+                            <option value="OUTROS">OUTROS</option>
                         </select>
                     </div>
                 </div>
@@ -85,6 +96,7 @@
 
             var $date_range = $('#id_date_range');
             var $status_select = $('#id_status_select');
+            var $convenio_select = $('#id_convenio_select');
 
             $date_range.daterangepicker({
                 startDate: start,
@@ -198,7 +210,8 @@
             function get_form_values() {
                 return {
                     'date_range': $date_range.val(),
-                    'status': $status_select.val()
+                    'status': $status_select.val(),
+                    'convenio': $convenio_select.val()
                 };
             }
 
@@ -209,6 +222,10 @@
             $status_select.change(function () {
                 table.ajax.reload();
             });
+
+            $convenio_select.change(function () {
+                table.ajax.reload();
+            })
 
         });
 

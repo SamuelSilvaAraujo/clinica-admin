@@ -18,6 +18,8 @@ def report_patients_ajax(request):
 
         status = request.GET.get('status')
 
+        convenio = request.GET.get('convenio')
+
         q_objects = Q()
 
         if dates_str:
@@ -26,6 +28,9 @@ def report_patients_ajax(request):
 
         if status and status != 'all':
             q_objects.add(Q(status=status), Q.AND)
+
+        if convenio and convenio != 'all':
+            q_objects.add(Q(patient__convenio=convenio), Q.AND)
 
         result = []
 
