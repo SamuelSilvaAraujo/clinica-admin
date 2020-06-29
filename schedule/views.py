@@ -4,6 +4,7 @@ from django.urls import reverse
 
 from datetime import datetime
 
+from immunotherapy.models import Immunotherapy
 from .models import Appointment
 from .forms import AppointmentForm
 
@@ -45,11 +46,14 @@ class AppointmentCreateView(LoginRequiredMixin, CreateView):
     def get_initial(self):
         initial = super(AppointmentCreateView, self).get_initial()
         initial = initial.copy()
-        start = datetime.strptime(self.get_parameters()['start'], "%Y-%m-%dT%H:%M:%S.%fZ")
-        end = datetime.strptime(self.get_parameters()['end'], "%Y-%m-%dT%H:%M:%S.%fZ")
-        initial['date'] = start.date().strftime('%d/%m/%Y')
-        initial['start_hour'] = start.time()
-        initial['end_hour'] = end.time()
+        start = self.get_parameters()['start']
+        end = self.get_parameters()['end']
+        if start and end:
+            start = datetime.strptime(start, "%Y-%m-%dT%H:%M:%S.%fZ")
+            end = datetime.strptime(end, "%Y-%m-%dT%H:%M:%S.%fZ")
+            initial['date'] = start.date().strftime('%d/%m/%Y')
+            initial['start_hour'] = start.time()
+            initial['end_hour'] = end.time()
         return initial
 
     def form_valid(self, form):
@@ -99,3 +103,40 @@ class AppointmentDeleteView(LoginRequiredMixin, DeleteView):
 
     def get_success_url(self):
         return reverse('schedule')
+
+
+class AppointmentCreateModal(LoginRequiredMixin, CreateView):
+    template_name = 'appointment/form-modal.html'
+    model = Appointment
+    form_class = AppointmentForm
+
+    def get_immunotherapy(self):
+        immunotherapy_id = self.kwargs['immunotherapy_id']
+        return Immunotherapy.objects.get(pk=immunotherapy_id)
+
+    def get_initial(self):
+        initial = super(AppointmentCreateModal, self).get_initial()
+        initial = initial.copy()
+        initial['patient'] = self.get_immunotherapy().patient
+        return initial
+
+    def get_context_data(self, **kwargs):
+        context = super(AppointmentCreateModal, self).get_context_data(**kwargs)
+        context["immunotherapy"] = self.get_immunotherapy()
+        return context
+
+    def form_valid(self, form):
+        date = form.cleaned_data['date']
+        start_hour = form.cleaned_data['start_hour']
+        end_hour = form.cleaned_data['end_hour']
+
+        start_date = datetime.strptime("{} {}".format(date, start_hour), "%Y-%m-%d %H:%M:%S")
+        end_date = datetime.strptime("{} {}".format(date, end_hour), "%Y-%m-%d %H:%M:%S")
+
+        form.instance.start = start_date
+        form.instance.end = end_date
+
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('immunotherapy_detail', kwargs={'pk': self.get_immunotherapy().id})

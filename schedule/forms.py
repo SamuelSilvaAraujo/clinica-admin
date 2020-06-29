@@ -16,5 +16,5 @@ class AppointmentForm(forms.ModelForm):
         fields = ('patient', 'start_hour', 'end_hour', 'date', 'notes', )
         widgets = {
             'patient': forms.Select(attrs={'class': 'form-control'}),
-            'notes': forms.Textarea(attrs={'class': 'form-control'}),
+            'notes': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
         }
