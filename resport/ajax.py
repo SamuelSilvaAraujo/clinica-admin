@@ -1,17 +1,18 @@
 import json
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
-from django.db.models import Q, Count, Value, IntegerField
+from django.db.models import Q
 from django.core.serializers.json import DjangoJSONEncoder
 
 from datetime import datetime
 
 from immunotherapy.models import Immunotherapy
 from pharmacy.models import Lot
+from spirometry.models import Spirometry
 
 
 @login_required()
-def report_patients_ajax(request):
+def report_immunotherapy_ajax(request):
     if request.is_ajax():
         date_range = request.GET.get('date_range')
         dates_str = date_range.split(' - ')
@@ -52,6 +53,34 @@ def report_patients_ajax(request):
             result.append(value)
 
         data = json.dumps({'aaData': result}, cls=DjangoJSONEncoder)
+    else:
+        data = 'fail'
+
+    return HttpResponse(data, 'application/json')
+
+
+@login_required()
+def report_spirometry_ajax(request):
+    if request.is_ajax():
+        date_range = request.GET.get('date_range')
+        dates_str = date_range.split(' - ')
+
+        convenio = request.GET.get('convenio')
+
+        q_objects = Q()
+
+        if dates_str:
+            start, end = datetime.strptime(dates_str[0], '%d/%m/%Y'), datetime.strptime(dates_str[1], '%d/%m/%Y')
+            q_objects.add(Q(date__gte=start, date__lte=end), Q.AND)
+
+        if convenio and convenio != 'all':
+            q_objects.add(Q(patient__convenio=convenio), Q.AND)
+
+        spirometries = Spirometry.objects \
+            .filter(q_objects) \
+            .order_by('patient').values('patient__name', 'date')
+
+        data = json.dumps({'aaData': list(spirometries)}, cls=DjangoJSONEncoder)
     else:
         data = 'fail'
 

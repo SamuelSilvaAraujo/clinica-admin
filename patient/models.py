@@ -34,9 +34,9 @@ class Patient(models.Model):
 
     name = models.CharField('Nome', max_length=150)
     birth_date = models.DateField('Data de Nascimento', null=True, blank=True)
-    address = models.CharField('Endereço', max_length=100)
-    city = models.CharField('Cidade', max_length=50)
-    state = models.CharField('Estado', max_length=2, choices=STATES_CHOICES)
+    address = models.CharField('Endereço', max_length=100, null=True, blank=True)
+    city = models.CharField('Cidade', max_length=50, null=True, blank=True)
+    state = models.CharField('Estado', max_length=2, choices=STATES_CHOICES, null=True, blank=True)
     phone = models.CharField('Telefone', max_length=16, blank=True, null=True)
     rg = models.CharField('RG', max_length=9, blank=True, null=True)
     cpf = models.CharField('CPF', max_length=14, blank=True, null=True)

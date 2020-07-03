@@ -10,7 +10,7 @@
 
 {% block header %}
     <h2>
-        Relatório de pacientes
+        Relatório Espirometria
     </h2>
 {% endblock %}
 
@@ -23,15 +23,6 @@
                     <div class="col-md-4 mb-4">
                         <label for="id_date_range" class="form-label">Período em que foi iniciado o tratamento</label>
                         <input type="text" id="id_date_range" name="date_range" class="form-control" placeholder="__/__/____">
-                    </div>
-                    <div class="col-md-4 mb-4">
-                        <label for="id_status_select" class="form-label">Status do tratamento</label>
-                        <select type="text" id="id_status_select" class="form-control">
-                            <option value="all">Todos</option>
-                            {% for status in status_choices %}
-                                <option value="{{ status.0 }}">{{ status.1 }}</option>
-                            {% endfor %}
-                        </select>
                     </div>
                     <div class="col-md-4 mb-4">
                         <label for="id_convenio_select" class="form-label">Convênio do paciente</label>
@@ -55,13 +46,8 @@
                 <table class="table" id="dataTable">
                     <thead>
                     <tr>
-                        <th class="text-center">Paciente</th>
-                        <th class="text-center">Data de início</th>
-                        <th class="text-center">Data de Fim</th>
-                        <th class="text-center">Frascos usados</th>
-                        <th class="text-center">Aplicações realizadas</th>
-                        <th class="text-center">Doença</th>
-                        <th class="text-center">Medicamento</th>
+                        <th>Paciente</th>
+                        <th>Data</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -155,15 +141,9 @@
                 buttons: [
                     { extend: 'print', text: 'Imprimir' }
                 ],
-                columnDefs: [
-                    {
-                        "targets": [0, 1, 2, 3, 4, 5, 6],
-                        "className": "text-center",
-                    }
-                ],
                 columns: [
                     {'data': 'patient__name'},
-                    {'data': 'start_date',
+                    {'data': 'date',
                         render: function(data, type, row){
                             if(type === "sort" || type === "type"){
                                 return data;
@@ -171,30 +151,9 @@
                             return moment(data).format("DD/MM/YYYY");
                         }
                     },
-                    {'data': 'end_date',
-                        render: function(data, type, row){
-                            if(type === "sort" || type === "type"){
-                                return data;
-                            }
-
-                            if(data != null){
-                                return moment(data).format("DD/MM/YYYY");
-                            }else {
-                                return "Em andamento"
-                            }
-                        }
-                    },
-                    {
-                        'data':'bottle_number'
-                    },
-                    {
-                        'data':'application_number'
-                    },
-                    {'data': 'illness__name'},
-                    {'data': 'medicine__name'},
                 ],
                 ajax: {
-                    "url": "{% url 'report_patients_ajax' %}",
+                    "url": "{% url 'report_spirometry_ajax' %}",
                     "contentType": "application/json",
                     "type": "GET",
                     "data": function (d) {
@@ -210,16 +169,11 @@
             function get_form_values() {
                 return {
                     'date_range': $date_range.val(),
-                    'status': $status_select.val(),
                     'convenio': $convenio_select.val()
                 };
             }
 
             $date_range.change(function () {
-                table.ajax.reload();
-            });
-
-            $status_select.change(function () {
                 table.ajax.reload();
             });
 

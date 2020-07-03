@@ -13,13 +13,22 @@ class ReportsView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class ReportPatientView(LoginRequiredMixin, TemplateView):
-    template_name = 'report/patient.html'
+class ReportImmunotherapyView(LoginRequiredMixin, TemplateView):
+    template_name = 'report/immunotherapy.html'
 
     def get_context_data(self, **kwargs):
-        context = super(ReportPatientView, self).get_context_data(**kwargs)
+        context = super(ReportImmunotherapyView, self).get_context_data(**kwargs)
         context["reportMenu"] = "active"
         context["status_choices"] = list(Immunotherapy.STATUS_CHOICES)
+        return context
+
+
+class ReportSpirometryView(LoginRequiredMixin, TemplateView):
+    template_name = 'report/spirometry.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ReportSpirometryView, self).get_context_data(**kwargs)
+        context["reportMenu"] = "active"
         return context
 
 
