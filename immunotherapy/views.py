@@ -1,5 +1,3 @@
-import io
-
 from django.urls import reverse
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView, FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -7,13 +5,8 @@ from django.http import HttpResponse
 
 from datetime import datetime
 
-from reportlab.lib.enums import TA_LEFT
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.pdfgen import canvas
-from reportlab.lib.units import cm, inch
-from reportlab.lib.pagesizes import letter
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
-from reportlab.lib import colors
+from reportlab.lib.units import cm
 
 from patient.models import Patient
 from .models import Immunotherapy, Application
@@ -149,6 +142,38 @@ class ApplicationCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.immunotherapy = self.get_immunotherapy()
         return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('immunotherapy_detail', kwargs={'pk': self.get_immunotherapy().id})
+
+
+class ApplicationUpdateView(LoginRequiredMixin, UpdateView):
+    model = Application
+    template_name = 'application/form-modal.html'
+    form_class = ApplicationForm
+
+    def get_immunotherapy(self):
+        immunotherapy_id = self.kwargs['immunotherapy_id']
+        immunotherapy = Immunotherapy.objects.get(id=immunotherapy_id)
+        return immunotherapy
+
+    def get_context_data(self, **kwargs):
+        context = super(ApplicationUpdateView, self).get_context_data(**kwargs)
+        context["immunotherapy"] = "active"
+        context["immunotherapy"] = self.get_immunotherapy()
+        return context
+
+    def get_success_url(self):
+        return reverse('immunotherapy_detail', kwargs={'pk': self.get_immunotherapy().id})
+
+
+class ApplicationDeleteView(LoginRequiredMixin, DeleteView):
+    model = Application
+
+    def get_immunotherapy(self):
+        immunotherapy_id = self.kwargs['immunotherapy_id']
+        immunotherapy = Immunotherapy.objects.get(id=immunotherapy_id)
+        return immunotherapy
 
     def get_success_url(self):
         return reverse('immunotherapy_detail', kwargs={'pk': self.get_immunotherapy().id})

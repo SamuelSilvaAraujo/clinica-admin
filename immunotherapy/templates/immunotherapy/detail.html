@@ -88,6 +88,7 @@
                                 <th>Aplicador</th>
                                 <th>Dosagem</th>
                                 <th>Frasco</th>
+                                <th></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -98,6 +99,17 @@
                                     <td>{{ application.applicator }}</td>
                                     <td>{{ application.dosage }}</td>
                                     <td>{{ application.bottle_number }}</td>
+                                    <td>
+                                        <form id="delete-application-form" method="post" action="{% url 'application_delete' immunotherapy.id application.id %}">
+                                            {% csrf_token %}
+                                            <button type="button" data-remote="{% url 'application_update' immunotherapy.id application.id %}"  data-toggle="modal" data-target="#applicationModal" class="btn btn-info btn-sm">
+                                                Editar
+                                            </button>
+                                            <button type="submit" onclick="return confirm('Você tem certeza que deseja excluir?');" class="btn btn-sm btn-danger">
+                                                Excluir
+                                            </button>
+                                        </form>
+                                    </td>
                                 </tr>
                             {% endfor %}
                             </tbody>

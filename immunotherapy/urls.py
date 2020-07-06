@@ -13,7 +13,11 @@ urlpatterns = [
         path('finalizar/', ImmunotherapyFinisheView.as_view(), name='immunotherapy_finishe'),
     ])),
 
-    path('<int:immunotherapy_id>/adiconar/aplicacao/', ApplicationCreateView.as_view(), name='application_create'),
+    path('<int:immunotherapy_id>/', include([
+        path('adiconar/aplicacao/', ApplicationCreateView.as_view(), name='application_create'),
+        path('editar/aplicacao/<int:pk>/', ApplicationUpdateView.as_view(), name='application_update'),
+        path('delete/aplicacao/<int:pk>/', ApplicationDeleteView.as_view(), name='application_delete')
+    ])),
 
     path('<int:immunotherapy_id>/imprimir/etiqueta/', OpenTagModal.as_view(), name='tag_pdf'),
     path('criar/etiqueta/', create_pdf_tag, name="create_pdf_tag"),

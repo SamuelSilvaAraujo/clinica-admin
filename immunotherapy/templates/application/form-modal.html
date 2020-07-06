@@ -5,7 +5,7 @@
     </button>
 </div>
 <div class="modal-body">
-    <form method="post" action="{% url 'application_create' immunotherapy.id %}">
+    <form method="post" action="{% if form.instance.pk %}{% url 'application_update' immunotherapy.id form.instance.pk %} {% else %}{% url 'application_create' immunotherapy.id %}{% endif %}">
         {% csrf_token %}
 
         <div class="form-group row">
