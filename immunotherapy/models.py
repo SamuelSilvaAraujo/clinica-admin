@@ -41,4 +41,4 @@ class Application(models.Model):
     dosage = models.CharField('Dosagem', max_length=10)
 
     class Meta:
-        ordering = ('application_number', )
+        ordering = ('date', )
