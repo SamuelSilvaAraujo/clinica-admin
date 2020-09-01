@@ -156,14 +156,62 @@
 
     <script src="{% static 'vendor/datatables/accent-neutralise.js' %}"></script>
 
+    <script src="{% static 'vendor/datatables/date-eu/date-eu.js' %}"></script>
+
     <script>
         $(document).ready(function() {
             $('#applicationTable').DataTable({
                 language: {
                     url: '//cdn.datatables.net/plug-ins/1.10.19/i18n/Portuguese-Brasil.json'
                 },
-                order: [[ 1, "desc" ], ]
+                order: [[ 1, "desc" ], ],
+                columnDefs: [
+                    { type: "date-eu", targets: 1 },
+                ]
             });
+
+            jQuery.extend( jQuery.fn.dataTableExt.oSort, {
+                "date-eu-pre": function ( date ) {
+                    date = date.split(" ")[0];
+
+                    if ( ! date ) {
+                        return 0;
+                    }
+
+                    var year;
+                    var eu_date = date.split(/[\.\-\/]/);
+
+                    /*year (optional)*/
+                    if ( eu_date[2] ) {
+                        year = eu_date[2];
+                    }
+                    else {
+                        year = 0;
+                    }
+
+                    /*month*/
+                    var month = eu_date[1];
+                    if ( month.length === 1 ) {
+                        month = 0+month;
+                    }
+
+                    /*day*/
+                    var day = eu_date[0];
+                    if ( day.length === 1 ) {
+                        day = 0+day;
+                    }
+
+                    return (year + month + day) * 1;
+                },
+
+                "date-eu-asc": function ( a, b ) {
+                    return ((a < b) ? -1 : ((a > b) ? 1 : 0));
+                },
+
+                "date-eu-desc": function ( a, b ) {
+                    return ((a < b) ? 1 : ((a > b) ? -1 : 0));
+                }
+            } );
 
             $('body').on('click', '[data-toggle="modal"]', function(){
                 $($(this).data("target")+' .modal-content').load($(this).data("remote"));
