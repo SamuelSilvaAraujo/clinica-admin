@@ -9,8 +9,10 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.units import cm
 
 from patient.models import Patient
+from schedule.models import Appointment
 from .models import Immunotherapy, Application
-from .forms import ImmunotherapyForm, ImmunotherapyFinisheForm, ApplicationForm, TagPdfForm
+from .forms import ImmunotherapyForm, ImmunotherapyFinisheForm, TagPdfForm, \
+    ApplicationUpdateForm, ApplicationCreateForm
 
 
 class ImmunotherapyListView(LoginRequiredMixin, ListView):
@@ -107,10 +109,9 @@ class ImmunotherapyDetailView(LoginRequiredMixin, DetailView):
         return context
 
 
-class ApplicationCreateView(LoginRequiredMixin, CreateView):
-    model = Application
-    template_name = 'application/form-modal.html'
-    form_class = ApplicationForm
+class ApplicationCreateView(LoginRequiredMixin, FormView):
+    template_name = 'application/form.html'
+    form_class = ApplicationCreateForm
 
     def get_immunotherapy(self):
         immunotherapy_id = self.kwargs['immunotherapy_id']
@@ -139,18 +140,49 @@ class ApplicationCreateView(LoginRequiredMixin, CreateView):
                 initial['bottle_number'] = last_application.bottle_number
         return initial
 
-    def form_valid(self, form):
-        form.instance.immunotherapy = self.get_immunotherapy()
-        return super().form_valid(form)
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
+        application_date = form["application_date"].value()
+        applicator = form["applicator"].value()
+        dosage = form["dosage"].value()
+        bottle_number = form["bottle_number"].value()
+        application_number = form["application_number"].value()
 
-    def get_success_url(self):
-        return reverse('immunotherapy_detail', kwargs={'pk': self.get_immunotherapy().id})
+        application_date = datetime.strptime(application_date, "%d/%m/%Y")
+
+        application = Application.objects.create(
+            immunotherapy=self.get_immunotherapy(),
+            date=application_date,
+            applicator=applicator,
+            dosage=dosage,
+            bottle_number=bottle_number,
+            application_number=application_number,
+        )
+
+        appointment_date = form["appointment_date"].value()
+        appointment_start_hour = form["appointment_start_hour"].value()
+        appointment_end_hour = form["appointment_end_hour"].value()
+        appointment_notes = form["appointment_notes"].value()
+
+        start_date = datetime.strptime("{} {}".format(appointment_date, appointment_start_hour), "%d/%m/%Y %H:%M")
+        end_date = datetime.strptime("{} {}".format(appointment_date, appointment_end_hour), "%d/%m/%Y %H:%M")
+
+        patient = self.get_immunotherapy().patient
+
+        appointment = Appointment.objects.create(
+            patient=patient,
+            start=start_date,
+            end=end_date,
+            notes=appointment_notes
+        )
+
+        return HttpResponse("<script>window.close()</script>")
 
 
 class ApplicationUpdateView(LoginRequiredMixin, UpdateView):
     model = Application
     template_name = 'application/form-modal.html'
-    form_class = ApplicationForm
+    form_class = ApplicationUpdateForm
 
     def get_immunotherapy(self):
         immunotherapy_id = self.kwargs['immunotherapy_id']

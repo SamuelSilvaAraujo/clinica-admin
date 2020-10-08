@@ -26,7 +26,7 @@ class ImmunotherapyFinisheForm(forms.ModelForm):
         }
 
 
-class ApplicationForm(forms.ModelForm):
+class ApplicationUpdateForm(forms.ModelForm):
     class Meta:
         model = Application
         fields = ('applicator', 'dosage', 'date', 'bottle_number', 'application_number', )
@@ -37,6 +37,39 @@ class ApplicationForm(forms.ModelForm):
             'bottle_number': forms.NumberInput(attrs={'class': 'form-control'}),
             'application_number': forms.NumberInput(attrs={'class': 'form-control'}),
         }
+
+
+class ApplicationCreateForm(forms.Form):
+    application_date = forms.DateField(label="Data da Aplicação", input_formats=['%d-%m-%Y'],
+                                       widget=forms.DateInput(attrs={'class': 'form-control',
+                                                                     'placeholder': '__/__/____'})
+                                       )
+    applicator = forms.CharField(label="Aplicador",
+                                 widget=forms.TextInput(attrs={'class': 'form-control'})
+                                 )
+    dosage = forms.CharField(label="Dosagem",
+                             widget=forms.TextInput(attrs={'class': 'form-control'})
+                             )
+    bottle_number = forms.IntegerField(label="Frasco",
+                                       widget=forms.NumberInput(attrs={'class': 'form-control'})
+                                       )
+    application_number = forms.IntegerField(label="Dose",
+                                            widget=forms.NumberInput(attrs={'class': 'form-control'})
+                                            )
+    appointment_date = forms.DateField(label='Data', input_formats=['%d-%m-%Y'],
+                                       widget=forms.TextInput(attrs={'class': 'form-control',
+                                                                     'placeholder': '__/__/____'})
+                                       )
+    appointment_start_hour = forms.TimeField(label='Hora de Inicio', input_formats=['%H:%M'],
+                                             widget=forms.TextInput(attrs={'class': 'form-control',
+                                                                           'placeholder': '__:__'})
+                                             )
+    appointment_end_hour = forms.TimeField(label='Hora de Fim', input_formats=['%H:%M'],
+                                           widget=forms.TextInput(attrs={'class': 'form-control',
+                                                                         'placeholder': '__:__'})
+                                           )
+    appointment_notes = forms.CharField(label="Descrição",
+                                        widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 4}))
 
 
 class TagPdfForm(forms.Form):

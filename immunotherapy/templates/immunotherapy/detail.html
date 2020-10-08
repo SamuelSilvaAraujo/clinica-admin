@@ -12,17 +12,14 @@
     <h2>
         {{ immunotherapy.patient.name }}&nbsp
         {% if immunotherapy.status == immunotherapy.IN_PROGRESS %}
-            <button class="btn btn-sm btn-primary" data-remote="{% url 'application_create' immunotherapy.id %}"  data-toggle="modal" data-target="#applicationModal">
+            <a href="{% url 'application_create' immunotherapy.id %}" target="_blank" class="btn btn-sm btn-primary">
                 Cadastrar Aplicação
-            </button>
+            </a>
             <button type="button" class="btn btn-sm btn-success" {% if immunotherapy.bottle_in_use %} onclick="return alert('Finalize o frasco em uso antes de finalizar a imunoterapia!')" {% else %} data-remote="{% url 'immunotherapy_finishe' immunotherapy.id %}"  data-toggle="modal" data-target="#finisheModal" {% endif %}>
                 Finalizar Imunoterapia
             </button>
             <button type="button" class="btn btn-sm btn-info" data-remote="{% url 'tag_pdf' immunotherapy.id %}"  data-toggle="modal" data-target="#tagModal">
                 Imprimir Etiqueta
-            </button>
-            <button type="button" class="btn btn-sm btn-warning" data-remote="{% url 'appointment_create_modal' immunotherapy.id %}"  data-toggle="modal" data-target="#appointmentModal">
-                Agendar aplicação
             </button>
         {% endif %}
     </h2>
@@ -138,12 +135,6 @@
         </div>
     </div>
 
-    <div class="modal inmodal fade" id="appointmentModal" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content animated bounceInRight"></div>
-        </div>
-    </div>
-
 {% endblock %}
 
 {% block script %}
@@ -216,6 +207,14 @@
             $('body').on('click', '[data-toggle="modal"]', function(){
                 $($(this).data("target")+' .modal-content').load($(this).data("remote"));
             });
+
+            var blurred = false;
+            window.onblur = function () {
+                blurred = true;
+            };
+            window.onfocus = function () {
+                location.reload()
+            };
 
         });
     </script>

@@ -15,8 +15,10 @@ urlpatterns = [
 
     path('<int:immunotherapy_id>/', include([
         path('adiconar/aplicacao/', ApplicationCreateView.as_view(), name='application_create'),
-        path('editar/aplicacao/<int:pk>/', ApplicationUpdateView.as_view(), name='application_update'),
-        path('delete/aplicacao/<int:pk>/', ApplicationDeleteView.as_view(), name='application_delete')
+        path('aplicacao/<int:pk>/', include([
+            path('editar/', ApplicationUpdateView.as_view(), name='application_update'),
+            path('delete/', ApplicationDeleteView.as_view(), name='application_delete')
+        ])),
     ])),
 
     path('<int:immunotherapy_id>/imprimir/etiqueta/', OpenTagModal.as_view(), name='tag_pdf'),
